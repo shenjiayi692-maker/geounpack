@@ -1,0 +1,20 @@
+[
+  {
+    "slug": "about",
+    "title": "About GeoUnpack",
+    "description": "Who makes GeoUnpack and why it runs entirely in your browser.",
+    "html": "<p>GeoUnpack is a small independent tool made by Jiayi, an independent developer based in Canada. It exists because people regularly receive ArcGIS packages and geodatabases without having an ArcGIS licence, and the free workarounds (renaming files, installing QGIS, using command-line GDAL) are not obvious to everyone.</p><p>The conversion runs on your own computer, inside your browser, using the open-source <a href=\"https://gdal.org\">GDAL</a> library compiled to WebAssembly. Your files are not uploaded.</p><p>Found a file that doesn't work? Questions or suggestions: please get in touch through the contact address listed on this page once it is published.</p>"
+  },
+  {
+    "slug": "privacy",
+    "title": "Privacy",
+    "description": "GeoUnpack does not upload or store your files.",
+    "html": "<p><strong>Your files never leave your computer.</strong> When you open a file, it is read by code running in your browser. Nothing about the file's content is sent to us or to anyone else.</p><p>The map preview loads background map tiles from OpenStreetMap's tile servers; those requests contain only the map area being displayed, not your data.</p><p>We use Cloudflare Web Analytics, which counts page views without cookies and without tracking you across sites.</p><p>If you buy a licence in the future, payment is handled by our payment provider; we receive your email address and the purchase details only.</p>"
+  },
+  {
+    "slug": "licenses",
+    "title": "Open-source licenses",
+    "description": "Open-source software used by GeoUnpack.",
+    "html": "<p>GeoUnpack is built on these open-source projects. Thank you to their authors.</p><ul><li><a href=\"https://github.com/bugra9/gdal3.js\">gdal3.js</a> (GDAL compiled to WebAssembly) — LGPL-2.1-or-later. GDAL itself is MIT/X licensed; bundled dependencies carry their own licenses. The unmodified library files are loaded from the jsDelivr CDN (npm package gdal3.js@2.8.1); source code is available at the link above.</li><li><a href=\"https://github.com/use-strict/7z-wasm\">7z-wasm</a> (7-Zip compiled to WebAssembly) — 7-Zip is licensed under the GNU LGPL with the unRAR restriction. Source: <a href=\"https://www.7-zip.org\">7-zip.org</a>.</li><li><a href=\"https://leafletjs.com\">Leaflet</a> — BSD-2-Clause.</li><li><a href=\"https://github.com/101arrowz/fflate\">fflate</a> — MIT.</li><li>Map data © <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors.</li></ul>"
+  }
+]

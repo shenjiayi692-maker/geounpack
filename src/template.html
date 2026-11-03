@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{title}}</title>
+<meta name="description" content="{{description}}">
+<link rel="canonical" href="{{canonical}}">
+<meta property="og:title" content="{{title}}">
+<meta property="og:description" content="{{description}}">
+<meta property="og:type" content="website">
+<meta property="og:url" content="{{canonical}}">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/vendor/leaflet.css">
+<link rel="stylesheet" href="/styles.css">
+<script type="application/ld+json">{{jsonld}}</script>
+</head>
+<body>
+<header class="site">
+  <a class="brand" href="/">GeoUnpack</a>
+  <nav>{{nav}}</nav>
+</header>
+<main>
+  <h1>{{h1}}</h1>
+  <p class="lead">{{lead}}</p>
+
+  <section class="tool" aria-label="Converter">
+    <div id="drop" class="drop" tabindex="0" role="button" aria-label="Choose a file">
+      <strong>Drop a .lpk, .lpkx, .mpk, .mpkx or zipped .gdb here</strong>
+      <span>or click to choose a file · up to 150 MB · your file stays on your computer</span>
+      <input id="file" type="file" accept=".lpk,.lpkx,.mpk,.mpkx,.zip,.7z" hidden>
+    </div>
+    <p id="status" class="status" role="status" aria-live="polite"></p>
+    <div id="result" hidden>
+      <div id="layers" class="layers"></div>
+      <div class="actions">
+        <label for="format">Format</label>
+        <select id="format">
+          <option value="shp">Shapefile (.zip)</option>
+          <option value="gpkg">GeoPackage (.gpkg)</option>
+          <option value="geojson">GeoJSON</option>
+          <option value="kml">KML (Google Earth)</option>
+          <option value="csv">CSV (Excel)</option>
+        </select>
+        <button id="export" type="button" class="primary">Export</button>
+      </div>
+    </div>
+    <div id="map" class="map" hidden></div>
+  </section>
+
+  <section>
+    <h2>How it works</h2>
+    <ol class="steps">{{steps}}</ol>
+  </section>
+  {{compare}}
+  <section>
+    <h2>Frequently asked questions</h2>
+    {{faq}}
+  </section>
+  <section>
+    <h2>More converters</h2>
+    <ul class="related">{{related}}</ul>
+  </section>
+</main>
+<footer class="site">
+  <p><a href="/about/">About</a> · <a href="/privacy/">Privacy</a> · <a href="/licenses/">Open-source licenses</a></p>
+  <p class="small">GeoUnpack is an independent tool and is not affiliated with or endorsed by Esri. ArcGIS, ArcMap and ArcGIS Pro are trademarks of Esri. Always keep a copy of your original file and check converted data before relying on it.</p>
+</footer>
+<script>window.GEOUNPACK_CONFIG = {{config}};</script>
+<script src="/vendor/leaflet.js" defer></script>
+<script src="/vendor/fflate.js" defer></script>
+<script src="/app.js" defer></script>
+</body>
+</html>
