@@ -84,6 +84,18 @@ Jiayi 想做“小工具 + 长尾 SEO”的独立产品。经过多轮调研（�
 | 税务和法律决定 | 需要会计或律师 |
 | 最终决定（定价、继续还是停止） | 是你的生意 |
 
+## 6.5 现在马上要做的事：谁来做（2026-11-03）
+| # | 事项 | 谁来做 | 怎么交给 Claude |
+|---|---|---|---|
+| 1 | 部署到 Cloudflare Pages | **两种方式二选一**：① 你在后台按 `docs/research/09-…` 第一节点按钮（15 分钟）；② 交给 Claude：你在 Cloudflare 创建一个 API Token（权限：Account › Cloudflare Pages › Edit），把它和 Account ID 加进云端环境的 Secrets，名称为 `CLOUDFLARE_API_TOKEN`、`CLOUDFLARE_ACCOUNT_ID`；Claude 用 `npx wrangler pages deploy dist --project-name geounpack` 直接部署 | “环境里已经有 Cloudflare 的 API Token，请把 GeoUnpack 以 NOINDEX 预览模式部署到 Cloudflare Pages，并在真实浏览器里测一遍线上网址。” |
+| 2 | 部署后的线上测试 | Claude 先在无头浏览器里测；你再在自己电脑的 Chrome / Edge / Safari 各试一次 | “请用 docs/TESTING.md 里的样本文件测试线上网址 https://xxx.pages.dev，报告问题并修复。” |
+| 3 | 起草论坛回答 | Claude 起草并验证 → **你**用自己的账号发 | 用第 5 节的 B1 指令 |
+| 4 | 注册账号、养号、发帖 | **只能你** | — |
+| 5 | Bing / Google 站长工具 | 等买了域名以后，**你**来注册和验证；Claude 可以给步骤 | — |
+| 6 | 买域名、接 Stripe | **你**付款和注册；接入代码 Claude 来写（A3、A4） | — |
+
+> 说明：Claude 在云端环境里能访问网络并运行命令，但**没有你的账号密码**。凡是需要“登录你的后台”的事，要么你自己点，要么你创建一个权限受限的 API Token 交给环境（不要把密码或 Token 直接贴在对话里，用环境的 Secrets 功能）。
+
 ## 7. 文件地图
 | 位置 | 内容 |
 |---|---|
