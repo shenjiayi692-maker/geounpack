@@ -18,7 +18,7 @@ node scripts/smoke-browser.cjs   # end-to-end test in headless Chromium on sampl
 `samples/` is git-ignored. Public test files can be downloaded from ArcGIS Online (see `docs/TESTING.md`).
 
 ## Deploy (Cloudflare Pages)
-Build command `npm run build`, output directory `dist`, environment variable `SITE_URL=https://geounpack.com` (or the pages.dev URL before the domain is bought).
+Build command `npm run build`, output directory `dist`. Environment variables: `NODE_VERSION=22`; before the real domain is live set `NOINDEX=1` and `SITE_URL=https://<project>.pages.dev` (keeps the preview out of search engines); after the domain is connected remove `NOINDEX` and set `SITE_URL=https://geounpack.com`.
 
 ## Status
 - v0.1 MVP: vector layers and tables from .lpk/.lpkx/.mpk/.mpkx/gdb.zip; exports SHP, GPKG, GeoJSON, KML, CSV; 15 converter pages.
