@@ -22,7 +22,7 @@ Jiayi 想做“小工具 + 长尾 SEO”的独立产品。经过多轮调研（�
 - ✅ 技术验证：8 个真实 Esri 文件，服务器端、WebAssembly、真实浏览器三层测试都通过（`docs/research/07-…`）。
 - ✅ MVP v0.1（分支 `mvp-v0.1`）：读取、地图预览、5 种格式导出；15 个落地页 + 关于/隐私/许可页；sitemap、robots、llms.txt、结构化数据；预览模式 `NOINDEX=1`。
 - ✅ 自动化测试：8/8 个文件、40/40 次导出成功，并用 GDAL 核对要素数和坐标。
-- ⏳ 部署：Jiayi 正在按 `docs/research/09-…` 第一节部署到 Cloudflare Pages。
+- ✅ 部署：https://geounpack.pages.dev（Cloudflare Pages 项目 `geounpack`，连接 GitHub，生产分支 `mvp-v0.1`，环境变量 NODE_VERSION=22、NOINDEX=1、SITE_URL=https://geounpack.pages.dev）。线上测试 6 个样本、30/30 次导出成功。注意：本环境的网络代理会改写授权头，wrangler 直接上传会失败，所以用 Git 集成自动构建。
 - ⏳ 收款：未接（`paywall: false`）。
 - ⏳ 养号：Jiayi 刚开始注册 GIS Stack Exchange、Reddit。
 - ⛔ 不支持：栅格、瓦片、场景包；150MB 以上的文件。
