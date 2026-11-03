@@ -67,19 +67,28 @@
 
   function fmtCount(n) { return n == null ? '?' : n.toLocaleString('en-US'); }
 
+  function geomLabel(t) {
+    if (!t) return 'Table';
+    const g = t.replace(/^Multi/, '').replace(/ ?Z$| ?M$| ?ZM$/, '');
+    return { Point: 'Points', LineString: 'Lines', Polygon: 'Polygons' }[g] || t;
+  }
+
   function renderLayers() {
     layersEl.innerHTML = '';
+    const first = firstGeomIndex();
     layers.forEach((l, idx) => {
-      const row = document.createElement('label');
-      row.className = 'layer';
-      const geom = l.geometryType ? l.geometryType : 'table (no geometry)';
-      row.innerHTML =
-        `<input type="checkbox" data-idx="${idx}" ${idx === firstGeomIndex() ? 'checked' : ''}>` +
-        `<span class="lname"></span>` +
-        `<span class="lmeta">${fmtCount(l.featureCount)} ${l.featureCount === 1 ? 'feature' : 'features'} · ${geom}${l.crs ? ' · ' + l.crs : ''}</span>` +
-        (l.geometryType ? `<button type="button" class="link" data-preview="${idx}">Preview</button>` : '');
-      row.querySelector('.lname').textContent = l.name + (multiSource() ? ` (${l.sourceLabel})` : '');
-      layersEl.appendChild(row);
+      const tr = document.createElement('tr');
+      if (!l.geometryType) tr.className = 'is-table';
+      const id = `lyr${idx}`;
+      tr.innerHTML =
+        `<td class="c-check"><input type="checkbox" id="${id}" data-idx="${idx}" ${idx === first ? 'checked' : ''}></td>` +
+        `<td class="lname"><label for="${id}"></label></td>` +
+        `<td>${geomLabel(l.geometryType)}</td>` +
+        `<td class="num">${fmtCount(l.featureCount)}</td>` +
+        `<td>${l.crs ? escapeHtml(l.crs) : '–'}</td>` +
+        `<td>${l.geometryType && l.featureCount ? `<button type="button" class="link" data-preview="${idx}">Preview</button>` : ''}</td>`;
+      tr.querySelector('label').textContent = l.name + (multiSource() ? ` (${l.sourceLabel})` : '');
+      layersEl.appendChild(tr);
     });
   }
 
@@ -116,7 +125,7 @@
       const b = previewLayer.getBounds();
       if (b.isValid()) map.fitBounds(b, { padding: [20, 20] });
       const note = l.featureCount > 2000 ? ' (first 2,000 features shown)' : '';
-      setStatus(`Previewing ${l.name}${note}. Click a feature to see its attributes.`, 'ok');
+      setStatus(`Showing ${l.name} on the map${note}. Click a feature to see its attributes.`, 'ok');
     } catch (err) {
       setStatus(err.message, 'error');
     }
@@ -151,7 +160,7 @@
       renderLayers();
       panel.hidden = false;
       const geomCount = layers.filter((l) => l.geometryType).length;
-      setStatus(`Found ${layers.length} layer(s) in ${file.name}, ${geomCount} with geometry. Choose layers and a format, then export.`, 'ok');
+      setStatus(`${file.name}: ${layers.length} ${layers.length === 1 ? 'layer' : 'layers'} found (${geomCount} with geometry). Tick the ones you need, then convert.`, 'ok');
       const first = layers[firstGeomIndex()];
       if (first) showPreview(first);
     } catch (err) {

@@ -1,204 +1,411 @@
 [
   {
     "slug": "",
-    "title": "Open & Convert Esri LPK, MPK and GDB Files Online — No ArcGIS Needed | GeoUnpack",
-    "h1": "Open Esri layer packages, map packages and geodatabases — no ArcGIS needed",
+    "title": "Open & Convert Esri LPK, MPK and GDB Files Online: No ArcGIS Needed | GeoUnpack",
+    "h1": "Esri Package Converter",
     "description": "Free online tool to open .lpk, .lpkx, .mpk, .mpkx and zipped .gdb files and convert them to Shapefile, GeoJSON, KML, CSV or GeoPackage. Runs in your browser; files are never uploaded.",
-    "lead": "Drop an Esri package or a zipped file geodatabase below. GeoUnpack lists every layer, previews it on a map, and exports it to the format you need — all inside your browser.",
+    "lead": "Drop an Esri package or a zipped file geodatabase below. GeoUnpack lists every layer, previews it on a map, and exports it to the format you need. All inside your browser.",
     "defaultFormat": "shp",
-    "steps": ["Drop your .lpk, .lpkx, .mpk, .mpkx or zipped .gdb file into the box.", "Check the layers you want. Click Preview to see a layer on the map.", "Pick an output format and click Export."],
+    "steps": [
+      "Drop your .lpk, .lpkx, .mpk, .mpkx or zipped .gdb file into the box.",
+      "Check the layers you want. Click Preview to see a layer on the map.",
+      "Pick an output format and click Convert & download."
+    ],
     "faq": [
-      ["Is my file uploaded to a server?", "No. GeoUnpack runs the open-source GDAL and 7-Zip libraries inside your browser using WebAssembly. Your file never leaves your computer."],
-      ["Which files can I open?", "ArcGIS layer packages (.lpk, .lpkx), map packages (.mpk, .mpkx) and file geodatabases (.gdb folders compressed as .zip). Vector layers and attribute tables are supported. Raster, tile and scene packages are not supported yet."],
-      ["Do I need ArcGIS or QGIS?", "No. You only need a modern browser such as Chrome, Edge, Firefox or Safari on a computer."],
-      ["Is there a size limit?", "Files up to 150 MB are supported for now, because everything runs in your browser's memory."]
-    ]
+      [
+        "Is my file uploaded to a server?",
+        "No. GeoUnpack runs the open-source GDAL and 7-Zip libraries inside your browser using WebAssembly. Your file never leaves your computer."
+      ],
+      [
+        "Which files can I open?",
+        "ArcGIS layer packages (.lpk, .lpkx), map packages (.mpk, .mpkx) and file geodatabases (.gdb folders compressed as .zip). Vector layers and attribute tables are supported. Raster, tile and scene packages are not supported yet."
+      ],
+      [
+        "Do I need ArcGIS or QGIS?",
+        "No. You only need a modern browser such as Chrome, Edge, Firefox or Safari on a computer."
+      ],
+      [
+        "Is there a size limit?",
+        "Files up to 150 MB are supported for now, because everything runs in your browser's memory."
+      ]
+    ],
+    "subtitle": "Open LPK, MPK and GDB files without ArcGIS. Preview the layers and convert them to Shapefile, GeoPackage, GeoJSON, KML or CSV.",
+    "from": "ANY"
   },
   {
     "slug": "lpk-to-shapefile",
-    "title": "LPK to Shapefile Converter — Convert ArcGIS Layer Package to SHP Online | GeoUnpack",
-    "h1": "Convert an LPK (ArcGIS layer package) to Shapefile",
+    "title": "LPK to Shapefile Converter: Convert ArcGIS Layer Package to SHP Online | GeoUnpack",
+    "h1": "LPK to Shapefile Converter",
     "description": "Convert .lpk and .lpkx layer packages to Shapefile (.shp) online without ArcGIS. Free, runs in your browser, files are never uploaded.",
     "lead": "An .lpk file is a compressed package that holds a layer's data (usually a file geodatabase) and its styling. GeoUnpack unpacks it and exports the data as a zipped Shapefile you can open in QGIS, AutoCAD Map 3D, Global Mapper or any GIS.",
     "defaultFormat": "shp",
-    "steps": ["Drop the .lpk or .lpkx file into the box.", "Select the layer (Preview shows it on a map).", "Keep 'Shapefile (.zip)' selected and click Export."],
+    "steps": [
+      "Drop the .lpk or .lpkx file into the box.",
+      "Select the layer (Preview shows it on a map).",
+      "Keep 'SHP (Shapefile)' selected and click Convert & download."
+    ],
     "faq": [
-      ["Can I just rename the .lpk to .zip?", "Often yes — an .lpk is a 7-Zip archive. You can extract it with 7-Zip and load the .gdb folder in QGIS. GeoUnpack does the same in one step, and also converts the data if you don't have QGIS."],
-      ["Will the symbology be kept?", "No. Shapefiles store geometry and attributes only. Colors, labels and symbols from the .lyr/.lyrx file are not converted."],
-      ["Why are some field names shortened?", "The Shapefile format limits field names to 10 characters and can truncate very large numbers. If exact values matter, export to GeoPackage or GeoJSON instead."]
-    ]
+      [
+        "Can I just rename the .lpk to .zip?",
+        "Often yes. An .lpk is a 7-Zip archive. You can extract it with 7-Zip and load the .gdb folder in QGIS. GeoUnpack does the same in one step, and also converts the data if you don't have QGIS."
+      ],
+      [
+        "Will the symbology be kept?",
+        "No. Shapefiles store geometry and attributes only. Colors, labels and symbols from the .lyr/.lyrx file are not converted."
+      ],
+      [
+        "Why are some field names shortened?",
+        "The Shapefile format limits field names to 10 characters and can truncate very large numbers. If exact values matter, export to GeoPackage or GeoJSON instead."
+      ]
+    ],
+    "subtitle": "Convert ArcGIS layer packages (.lpk, .lpkx) to Shapefile. No ArcGIS needed.",
+    "from": "LPK"
   },
   {
     "slug": "lpk-to-kml",
-    "title": "LPK to KML Converter — Open ArcGIS Layer Packages in Google Earth | GeoUnpack",
-    "h1": "Convert an LPK layer package to KML for Google Earth",
+    "title": "LPK to KML Converter: Open ArcGIS Layer Packages in Google Earth | GeoUnpack",
+    "h1": "LPK to KML Converter",
     "description": "Turn an ArcGIS .lpk or .lpkx layer package into a KML file you can open in Google Earth. Free online, no ArcGIS, no upload.",
     "lead": "Got an .lpk but only have Google Earth? GeoUnpack extracts the layer, reprojects it to WGS84 and writes a KML file Google Earth can open.",
     "defaultFormat": "kml",
-    "steps": ["Drop the .lpk or .lpkx file into the box.", "Select the layer you want.", "Choose 'KML' and click Export, then open the file in Google Earth."],
+    "steps": [
+      "Drop the .lpk or .lpkx file into the box.",
+      "Select the layer you want.",
+      "Choose 'KML (Google Earth)' and click Convert & download, then open the file in Google Earth."
+    ],
     "faq": [
-      ["Will it line up correctly in Google Earth?", "Yes. KML must use WGS84 longitude/latitude, so GeoUnpack reprojects the data automatically from the package's coordinate system."],
-      ["Does KML keep the attributes?", "Yes, attributes are stored as extended data and show in the feature balloon in Google Earth."]
-    ]
+      [
+        "Will it line up correctly in Google Earth?",
+        "Yes. KML must use WGS84 longitude/latitude, so GeoUnpack reprojects the data automatically from the package's coordinate system."
+      ],
+      [
+        "Does KML keep the attributes?",
+        "Yes, attributes are stored as extended data and show in the feature balloon in Google Earth."
+      ]
+    ],
+    "subtitle": "Convert ArcGIS layer packages to KML and open them in Google Earth.",
+    "from": "LPK"
   },
   {
     "slug": "lpk-to-geojson",
-    "title": "LPK to GeoJSON Converter Online — Free, No Upload | GeoUnpack",
-    "h1": "Convert an LPK layer package to GeoJSON",
+    "title": "LPK to GeoJSON Converter Online: Free, No Upload | GeoUnpack",
+    "h1": "LPK to GeoJSON Converter",
     "description": "Convert ArcGIS .lpk and .lpkx layer packages to GeoJSON for web maps (Leaflet, Mapbox, deck.gl). Free and private: runs in your browser.",
     "lead": "GeoJSON is the easiest format for web maps and scripts. GeoUnpack converts the layer inside your .lpk to GeoJSON in WGS84 with six-decimal precision.",
     "defaultFormat": "geojson",
-    "steps": ["Drop the .lpk or .lpkx file into the box.", "Select one or more layers.", "Choose 'GeoJSON' and click Export."],
+    "steps": [
+      "Drop the .lpk or .lpkx file into the box.",
+      "Select one or more layers.",
+      "Choose 'GeoJSON' and click Convert & download."
+    ],
     "faq": [
-      ["What coordinate system does the GeoJSON use?", "WGS84 (EPSG:4326), as required by the GeoJSON specification."],
-      ["My GeoJSON is very large. Why?", "GeoJSON is plain text and detailed polygons produce big files. For large layers, GeoPackage is more compact."]
-    ]
+      [
+        "What coordinate system does the GeoJSON use?",
+        "WGS84 (EPSG:4326), as required by the GeoJSON specification."
+      ],
+      [
+        "My GeoJSON is very large. Why?",
+        "GeoJSON is plain text and detailed polygons produce big files. For large layers, GeoPackage is more compact."
+      ]
+    ],
+    "subtitle": "Convert ArcGIS layer packages to GeoJSON (WGS84) for web maps and scripts.",
+    "from": "LPK"
   },
   {
     "slug": "lpk-viewer",
-    "title": "LPK Viewer — Open .lpk Files Online Without ArcGIS | GeoUnpack",
-    "h1": "LPK viewer: open .lpk files online without ArcGIS",
+    "title": "LPK Viewer: Open .lpk Files Online Without ArcGIS | GeoUnpack",
+    "h1": "LPK Viewer",
     "description": "View the contents of an ArcGIS .lpk or .lpkx layer package online: layers, feature counts, attributes and a map preview. No install, no upload.",
-    "lead": "Find out what's inside an .lpk file in seconds: layer names, feature counts, coordinate system, attributes and a map preview — no ArcGIS licence required.",
+    "lead": "Find out what's inside an .lpk file in seconds: layer names, feature counts, coordinate system, attributes and a map preview. No ArcGIS licence required.",
     "defaultFormat": "geojson",
-    "steps": ["Drop the .lpk or .lpkx file into the box.", "Click Preview next to a layer to see it on the map.", "Click any feature to read its attributes."],
+    "steps": [
+      "Drop the .lpk or .lpkx file into the box.",
+      "Click Preview next to a layer to see it on the map.",
+      "Click any feature to read its attributes."
+    ],
     "faq": [
-      ["What is an .lpk file?", "An ArcGIS layer package. It bundles a layer's styling (.lyr) with a copy of its data, usually in a file geodatabase, compressed into a single file for sharing."],
-      ["How do I open an .lpk in QGIS?", "Extract it with 7-Zip, open the 'v10' or 'v108' folder and drag the .gdb folder into QGIS. Or convert it to Shapefile or GeoPackage here."]
-    ]
+      [
+        "What is an .lpk file?",
+        "An ArcGIS layer package. It bundles a layer's styling (.lyr) with a copy of its data, usually in a file geodatabase, compressed into a single file for sharing."
+      ],
+      [
+        "How do I open an .lpk in QGIS?",
+        "Extract it with 7-Zip, open the 'v10' or 'v108' folder and drag the .gdb folder into QGIS. Or convert it to Shapefile or GeoPackage here."
+      ]
+    ],
+    "subtitle": "See the layers, attributes and map inside an .lpk file. No ArcGIS needed.",
+    "from": "LPK"
   },
   {
     "slug": "open-lpk-without-arcgis",
     "title": "How to Open an LPK File Without ArcGIS (3 Ways) | GeoUnpack",
-    "h1": "How to open an LPK file without ArcGIS",
+    "h1": "Open an LPK File Without ArcGIS",
     "description": "Three ways to open an ArcGIS .lpk layer package without ArcGIS: an online converter, 7-Zip + QGIS, or GDAL's ogr2ogr. Step-by-step.",
     "lead": "You don't need an ArcGIS licence to get the data out of an .lpk. Use the tool below, or follow one of the free manual methods further down.",
     "defaultFormat": "shp",
-    "steps": ["Easiest: drop the .lpk below and export to Shapefile, GeoPackage or KML.", "With QGIS: extract the .lpk with 7-Zip, then drag the .gdb folder from the 'v10'/'v108' subfolder into QGIS.", "With GDAL: extract it, then run ogr2ogr -f GPKG out.gpkg path/to/data.gdb."],
+    "steps": [
+      "Easiest: drop the .lpk below and export to Shapefile, GeoPackage or KML.",
+      "With QGIS: extract the .lpk with 7-Zip, then drag the .gdb folder from the 'v10'/'v108' subfolder into QGIS.",
+      "With GDAL: extract it, then run ogr2ogr -f GPKG out.gpkg path/to/data.gdb."
+    ],
     "faq": [
-      ["Which method should I use?", "If you already have QGIS, method 2 is free and keeps everything local. If you don't want to install anything, use the online tool — it also runs locally in your browser."],
-      ["Can I edit the data?", "Once exported to Shapefile or GeoPackage you can edit it in any GIS. The original .lpk is not changed."]
-    ]
+      [
+        "Which method should I use?",
+        "If you already have QGIS, method 2 is free and keeps everything local. If you don't want to install anything, use the online tool. It also runs locally in your browser."
+      ],
+      [
+        "Can I edit the data?",
+        "Once exported to Shapefile or GeoPackage you can edit it in any GIS. The original .lpk is not changed."
+      ]
+    ],
+    "subtitle": "Use the converter below, or follow one of the free manual methods further down.",
+    "from": "LPK"
   },
   {
     "slug": "lpkx-to-shapefile",
-    "title": "LPKX to Shapefile — Convert ArcGIS Pro Layer Packages Online | GeoUnpack",
-    "h1": "Convert an LPKX (ArcGIS Pro layer package) to Shapefile",
+    "title": "LPKX to Shapefile: Convert ArcGIS Pro Layer Packages Online | GeoUnpack",
+    "h1": "LPKX to Shapefile Converter",
     "description": "Convert ArcGIS Pro .lpkx layer packages to Shapefile, GeoPackage or GeoJSON online. No ArcGIS Pro needed, files are not uploaded.",
     "lead": ".lpkx is the ArcGIS Pro version of the layer package. GeoUnpack reads the vector layers inside and exports them to Shapefile or other formats.",
     "defaultFormat": "shp",
-    "steps": ["Drop the .lpkx file into the box.", "Select the vector layers you want.", "Choose a format and click Export."],
+    "steps": [
+      "Drop the .lpkx file into the box.",
+      "Select the vector layers you want.",
+      "Choose a format and click Convert & download."
+    ],
     "faq": [
-      ["My .lpkx contains elevation or imagery. Is that supported?", "Not yet. GeoUnpack currently converts vector layers and tables. Raster support is planned."],
-      ["What's the difference between .lpk and .lpkx?", ".lpk comes from ArcMap, .lpkx from ArcGIS Pro. Both are 7-Zip archives containing the layer data."]
-    ]
+      [
+        "My .lpkx contains elevation or imagery. Is that supported?",
+        "Not yet. GeoUnpack currently converts vector layers and tables. Raster support is planned."
+      ],
+      [
+        "What's the difference between .lpk and .lpkx?",
+        ".lpk comes from ArcMap, .lpkx from ArcGIS Pro. Both are 7-Zip archives containing the layer data."
+      ]
+    ],
+    "subtitle": "Convert ArcGIS Pro layer packages (.lpkx) to Shapefile, GeoPackage or GeoJSON.",
+    "from": "LPKX"
   },
   {
     "slug": "mpk-viewer",
-    "title": "MPK Viewer — Open ArcGIS Map Packages (.mpk, .mpkx) Online | GeoUnpack",
-    "h1": "MPK viewer: open ArcGIS map packages online",
+    "title": "MPK Viewer: Open ArcGIS Map Packages (.mpk, .mpkx) Online | GeoUnpack",
+    "h1": "MPK Viewer",
     "description": "Open .mpk and .mpkx map packages online without ArcGIS. See every layer, feature counts, attributes and a map preview. Free, private, no upload.",
-    "lead": "A map package bundles a whole map — several layers and their data. GeoUnpack lists all the layers inside and lets you preview and export them.",
+    "lead": "A map package bundles a whole map. Several layers and their data. GeoUnpack lists all the layers inside and lets you preview and export them.",
     "defaultFormat": "gpkg",
-    "steps": ["Drop the .mpk or .mpkx file into the box.", "Browse the layer list; click Preview to see a layer.", "Select layers and export them to the format you need."],
+    "steps": [
+      "Drop the .mpk or .mpkx file into the box.",
+      "Browse the layer list; click Preview to see a layer.",
+      "Select layers and export them to the format you need."
+    ],
     "faq": [
-      ["What is an .mpk file?", "An ArcGIS map package. It contains the map document (.mxd or .mapx) plus copies of the data for every layer, usually in file geodatabases."],
-      ["Can I open the map layout?", "No. GeoUnpack extracts the data layers. Map layouts, symbols and labels require ArcGIS."]
-    ]
+      [
+        "What is an .mpk file?",
+        "An ArcGIS map package. It contains the map document (.mxd or .mapx) plus copies of the data for every layer, usually in file geodatabases."
+      ],
+      [
+        "Can I open the map layout?",
+        "No. GeoUnpack extracts the data layers. Map layouts, symbols and labels require ArcGIS."
+      ]
+    ],
+    "subtitle": "Open ArcGIS map packages (.mpk, .mpkx) and browse every layer they contain.",
+    "from": "MPK"
   },
   {
     "slug": "mpk-to-shapefile",
-    "title": "MPK to Shapefile Converter — Extract Layers from ArcGIS Map Packages | GeoUnpack",
-    "h1": "Convert an MPK map package to Shapefiles",
+    "title": "MPK to Shapefile Converter: Extract Layers from ArcGIS Map Packages | GeoUnpack",
+    "h1": "MPK to Shapefile Converter",
     "description": "Extract every layer from an ArcGIS .mpk or .mpkx map package and convert it to Shapefile, GeoPackage, KML or CSV. Free online, no ArcGIS.",
     "lead": "Export the layers of a map package to Shapefiles in one go. Each layer is exported to its own folder inside a single .zip download.",
     "defaultFormat": "shp",
-    "steps": ["Drop the .mpk or .mpkx file into the box.", "Check every layer you want.", "Choose 'Shapefile (.zip)' and click Export."],
+    "steps": [
+      "Drop the .mpk or .mpkx file into the box.",
+      "Check every layer you want.",
+      "Choose 'SHP (Shapefile)' and click Convert & download."
+    ],
     "faq": [
-      ["What happens to tables without geometry?", "Standalone tables (for example inspection records or relationship tables) are exported as CSV."],
-      ["Why do I see fewer layers than in ArcGIS?", "Packages often contain the same data twice for different ArcGIS versions. GeoUnpack shows only the newest copy."]
-    ]
+      [
+        "What happens to tables without geometry?",
+        "Standalone tables (for example inspection records or relationship tables) are exported as CSV."
+      ],
+      [
+        "Why do I see fewer layers than in ArcGIS?",
+        "Packages often contain the same data twice for different ArcGIS versions. GeoUnpack shows only the newest copy."
+      ]
+    ],
+    "subtitle": "Export every layer in an ArcGIS map package to Shapefile in one download.",
+    "from": "MPK"
   },
   {
     "slug": "layer-package-to-shapefile",
-    "title": "ArcGIS Layer Package to Shapefile — Free Online Converter | GeoUnpack",
-    "h1": "Convert an ArcGIS layer package to Shapefile",
+    "title": "ArcGIS Layer Package to Shapefile: Free Online Converter | GeoUnpack",
+    "h1": "Layer Package to Shapefile",
     "description": "Convert an ArcGIS layer package (.lpk/.lpkx) to Shapefile without ArcGIS or ArcGIS Pro. Free, browser-based, private.",
-    "lead": "Someone sent you a layer package and you need plain Shapefiles? Drop it below — no ArcGIS licence, no installation, no upload.",
+    "lead": "Someone sent you a layer package and you need plain Shapefiles? Drop it below. No ArcGIS licence, no installation, no upload.",
     "defaultFormat": "shp",
-    "steps": ["Drop the layer package into the box.", "Select the layer.", "Export as 'Shapefile (.zip)'."],
+    "steps": [
+      "Drop the layer package into the box.",
+      "Select the layer.",
+      "Choose 'SHP (Shapefile)' and click Convert & download."
+    ],
     "faq": [
-      ["Is this the same as ArcGIS 'Extract Package'?", "It extracts the same data. The difference is that you don't need ArcGIS, and the result is converted to Shapefile (or another format) directly."]
-    ]
+      [
+        "Is this the same as ArcGIS 'Extract Package'?",
+        "It extracts the same data. The difference is that you don't need ArcGIS, and the result is converted to Shapefile (or another format) directly."
+      ]
+    ],
+    "subtitle": "Convert an ArcGIS layer package to plain Shapefiles. No licence, no install.",
+    "from": "LPK"
   },
   {
     "slug": "gdb-to-shapefile",
-    "title": "GDB to Shapefile Converter — File Geodatabase to SHP Online | GeoUnpack",
-    "h1": "Convert a file geodatabase (.gdb) to Shapefile",
+    "title": "GDB to Shapefile Converter: File Geodatabase to SHP Online | GeoUnpack",
+    "h1": "GDB to Shapefile Converter",
     "description": "Convert Esri file geodatabase feature classes to Shapefile online. Zip your .gdb folder, drop it in, export. No ArcGIS, no upload.",
     "lead": "A file geodatabase is a folder, not a single file. Compress the whole .gdb folder to a .zip, drop it below, and export any feature class to Shapefile.",
     "defaultFormat": "shp",
-    "steps": ["Right-click the .gdb folder and compress it to a .zip file.", "Drop the .zip into the box.", "Select feature classes and export as 'Shapefile (.zip)'."],
+    "steps": [
+      "Right-click the .gdb folder and compress it to a .zip file.",
+      "Drop the .zip into the box.",
+      "Select feature classes and export as 'SHP (Shapefile)'."
+    ],
     "faq": [
-      ["Why do I need to zip the .gdb folder?", "Browsers can only receive single files. Zipping the folder keeps all of its internal files together."],
-      ["Are feature datasets supported?", "Yes, feature classes inside feature datasets are listed like any other layer."]
-    ]
+      [
+        "Why do I need to zip the .gdb folder?",
+        "Browsers can only receive single files. Zipping the folder keeps all of its internal files together."
+      ],
+      [
+        "Are feature datasets supported?",
+        "Yes, feature classes inside feature datasets are listed like any other layer."
+      ]
+    ],
+    "subtitle": "Convert file geodatabase feature classes to Shapefile. Zip the .gdb folder first.",
+    "from": "GDB"
   },
   {
     "slug": "gdb-to-kml",
-    "title": "GDB to KML Converter — Open File Geodatabases in Google Earth | GeoUnpack",
-    "h1": "Convert a file geodatabase (.gdb) to KML",
+    "title": "GDB to KML Converter: Open File Geodatabases in Google Earth | GeoUnpack",
+    "h1": "GDB to KML Converter",
     "description": "Convert feature classes from an Esri file geodatabase to KML for Google Earth. Free online, private, no ArcGIS required.",
     "lead": "Zip your .gdb folder, drop it below and export any feature class to KML, reprojected to WGS84 for Google Earth.",
     "defaultFormat": "kml",
-    "steps": ["Compress the .gdb folder to a .zip.", "Drop the .zip into the box.", "Select layers, choose 'KML' and click Export."],
+    "steps": [
+      "Compress the .gdb folder to a .zip.",
+      "Drop the .zip into the box.",
+      "Select layers, choose 'KML' and click Convert & download."
+    ],
     "faq": [
-      ["Can I make a KMZ?", "Export to KML, then compress the .kml file to a .zip and rename it to .kmz. Google Earth opens both."]
-    ]
+      [
+        "Can I make a KMZ?",
+        "Export to KML, then compress the .kml file to a .zip and rename it to .kmz. Google Earth opens both."
+      ]
+    ],
+    "subtitle": "Convert file geodatabase feature classes to KML for Google Earth.",
+    "from": "GDB"
   },
   {
     "slug": "gdb-to-geojson",
-    "title": "GDB to GeoJSON Converter Online — File Geodatabase to GeoJSON | GeoUnpack",
-    "h1": "Convert a file geodatabase (.gdb) to GeoJSON",
+    "title": "GDB to GeoJSON Converter Online: File Geodatabase to GeoJSON | GeoUnpack",
+    "h1": "GDB to GeoJSON Converter",
     "description": "Convert Esri file geodatabase feature classes to GeoJSON (WGS84) online. Free, runs in your browser, nothing uploaded.",
     "lead": "Export feature classes from a zipped .gdb to GeoJSON for web maps, Python or JavaScript.",
     "defaultFormat": "geojson",
-    "steps": ["Compress the .gdb folder to a .zip.", "Drop the .zip into the box.", "Select layers, choose 'GeoJSON' and click Export."],
+    "steps": [
+      "Compress the .gdb folder to a .zip.",
+      "Drop the .zip into the box.",
+      "Select layers, choose 'GeoJSON' and click Convert & download."
+    ],
     "faq": [
-      ["Can I convert several feature classes at once?", "Yes. Select several layers and they are exported into one .zip, one GeoJSON file per layer."]
-    ]
+      [
+        "Can I convert several feature classes at once?",
+        "Yes. Select several layers and they are exported into one .zip, one GeoJSON file per layer."
+      ]
+    ],
+    "subtitle": "Convert file geodatabase feature classes to GeoJSON (WGS84).",
+    "from": "GDB"
   },
   {
     "slug": "gdb-to-csv",
-    "title": "GDB to CSV / Excel — Export File Geodatabase Attribute Tables | GeoUnpack",
-    "h1": "Export a file geodatabase (.gdb) to CSV for Excel",
+    "title": "GDB to CSV / Excel: Export File Geodatabase Attribute Tables | GeoUnpack",
+    "h1": "GDB to CSV Converter",
     "description": "Export Esri file geodatabase feature classes and tables to CSV you can open in Excel or Google Sheets. Geometry included as WKT. Free, private.",
     "lead": "Need the attribute table in Excel? Export any feature class or standalone table from a zipped .gdb to CSV. Geometry is added as a WKT column.",
     "defaultFormat": "csv",
-    "steps": ["Compress the .gdb folder to a .zip.", "Drop the .zip into the box.", "Select layers or tables, choose 'CSV' and click Export, then open the file in Excel."],
+    "steps": [
+      "Compress the .gdb folder to a .zip.",
+      "Drop the .zip into the box.",
+      "Select layers or tables, choose 'CSV' and click Convert & download, then open the file in Excel."
+    ],
     "faq": [
-      ["Can I remove the geometry column?", "Delete the WKT column in Excel after opening, or ignore it — all attribute columns are kept as they are."],
-      ["Accents or special characters look wrong in Excel?", "Open the CSV with Data > From Text/CSV and choose UTF-8 encoding."]
-    ]
+      [
+        "Can I remove the geometry column?",
+        "Delete the WKT column in Excel after opening, or ignore it. All attribute columns are kept as they are."
+      ],
+      [
+        "Accents or special characters look wrong in Excel?",
+        "Open the CSV with Data > From Text/CSV and choose UTF-8 encoding."
+      ]
+    ],
+    "subtitle": "Export geodatabase attribute tables to CSV for Excel or Google Sheets.",
+    "from": "GDB"
   },
   {
     "slug": "mygeodata-alternative",
     "title": "MyGeodata Converter Alternative That Doesn't Upload Your Files | GeoUnpack",
-    "h1": "A MyGeodata alternative that keeps your files on your computer",
-    "description": "Looking for a MyGeodata Converter alternative for Esri files? GeoUnpack opens LPK, MPK and GDB files in your browser — no upload, no account.",
+    "h1": "A Converter That Keeps Your Files Local",
+    "description": "Looking for a MyGeodata Converter alternative for Esri files? GeoUnpack opens LPK, MPK and GDB files in your browser. No upload, no account.",
     "lead": "Cloud converters upload your data to their servers. GeoUnpack does the conversion inside your browser instead, which matters when the data belongs to a client or a government agency.",
     "defaultFormat": "gpkg",
-    "steps": ["Drop your Esri file into the box.", "Preview and pick layers.", "Export — the data never leaves your machine."],
+    "steps": [
+      "Drop your Esri file into the box.",
+      "Preview and pick layers.",
+      "Click Convert & download. The data never leaves your machine."
+    ],
     "compare": [
-      ["", "GeoUnpack", "Cloud converters", "QGIS (manual)"],
-      ["Upload required", "No", "Yes", "No"],
-      ["Opens .lpk / .mpk packages", "Yes", "Varies", "After extracting with 7-Zip"],
-      ["Install required", "No", "No", "Yes"],
-      ["Account required", "No", "Usually for larger jobs", "No"],
-      ["Raster data", "Not yet", "Varies", "Yes"]
+      [
+        "",
+        "GeoUnpack",
+        "Cloud converters",
+        "QGIS (manual)"
+      ],
+      [
+        "Upload required",
+        "No",
+        "Yes",
+        "No"
+      ],
+      [
+        "Opens .lpk / .mpk packages",
+        "Yes",
+        "Varies",
+        "After extracting with 7-Zip"
+      ],
+      [
+        "Install required",
+        "No",
+        "No",
+        "Yes"
+      ],
+      [
+        "Account required",
+        "No",
+        "Usually for larger jobs",
+        "No"
+      ],
+      [
+        "Raster data",
+        "Not yet",
+        "Varies",
+        "Yes"
+      ]
     ],
     "faq": [
-      ["When should I use a cloud converter instead?", "For very large files, raster data or formats GeoUnpack doesn't support yet. For sensitive data or quick Esri package conversions, local conversion is simpler and safer."]
-    ]
+      [
+        "When should I use a cloud converter instead?",
+        "For very large files, raster data or formats GeoUnpack doesn't support yet. For sensitive data or quick Esri package conversions, local conversion is simpler and safer."
+      ]
+    ],
+    "subtitle": "An alternative to cloud GIS converters for Esri packages: nothing is uploaded.",
+    "from": "ANY"
   }
 ]

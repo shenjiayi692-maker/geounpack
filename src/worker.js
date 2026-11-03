@@ -85,7 +85,12 @@ async function openFile(file) {
   const sz = await SevenZip({ locateFile: (f) => `/vendor/${f}`, print: () => {}, printErr: () => {} });
   const buf = new Uint8Array(await file.arrayBuffer());
   sz.FS.writeFile('/in.pkg', buf);
-  sz.callMain(['x', '/in.pkg', '-o/out', '-y']);
+  let rc = 0;
+  try { rc = sz.callMain(['x', '/in.pkg', '-o/out', '-y']); } catch (e) { rc = e?.status ?? 2; }
+  if (rc && rc !== 0 && !sz.FS.analyzePath('/out').exists) {
+    throw new Error("This file couldn't be unpacked. It may be damaged, incomplete, or not an Esri package. Try downloading it again.");
+  }
+  if (!sz.FS.analyzePath('/out').exists) sz.FS.mkdir('/out');
 
   const found = walk(sz.FS, '/out', { gdbs: [], shps: [] });
   const gdbs = dedupe(found.gdbs);
@@ -193,7 +198,8 @@ self.onmessage = async (e) => {
     const transfer = result?.files ? result.files.map((f) => f.bytes.buffer) : [];
     self.postMessage({ id, type: 'result', result }, transfer);
   } catch (err) {
-    const msg = err?.message || String(err);
+    let msg = err?.message || (typeof err === 'string' ? err : '');
+    if (!msg || msg === '[object Object]') msg = "Something went wrong while reading this file. It may be damaged or in a format GeoUnpack doesn't support yet.";
     const oom = /memory|Aborted\(|out of bounds/i.test(msg);
     self.postMessage({
       id,

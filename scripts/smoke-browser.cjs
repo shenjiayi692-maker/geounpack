@@ -4,6 +4,7 @@ const { chromium } = require('playwright');
 const http = require('http'); const fs = require('fs'); const path = require('path');
 const dist = path.resolve(__dirname, '../dist');
 const samples = path.resolve(process.argv[2] || path.join(__dirname, '../samples'));
+const BASE = process.env.BASE_URL || `http://localhost:${process.env.PORT || 8799}`;
 const outDir = path.resolve(process.argv[3] || path.join(__dirname, '../samples/_out'));
 const types = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.wasm': 'application/wasm', '.svg': 'image/svg+xml', '.png': 'image/png' };
 const server = http.createServer((req, res) => {
@@ -11,7 +12,7 @@ const server = http.createServer((req, res) => {
   const f = path.join(dist, p);
   if (!f.startsWith(dist) || !fs.existsSync(f)) { res.writeHead(404); return res.end(); }
   res.writeHead(200, { 'Content-Type': types[path.extname(f)] || 'application/octet-stream' }); fs.createReadStream(f).pipe(res);
-}).listen(8799);
+}).listen(+(process.env.PORT || 8799));
 (async () => {
   fs.mkdirSync(outDir, { recursive: true });
   const proxy = process.env.HTTPS_PROXY ? { server: process.env.HTTPS_PROXY, bypass: 'localhost,127.0.0.1' } : undefined;
@@ -22,7 +23,7 @@ const server = http.createServer((req, res) => {
     const ctx = await browser.newContext({ acceptDownloads: true, ignoreHTTPSErrors: true });
     const page = await ctx.newPage();
     page.on('pageerror', (e) => console.log('  pageerror', e.message));
-    await page.goto('http://localhost:8799/');
+    await page.goto(BASE + '/');
     const t = Date.now();
     await page.setInputFiles('#file', path.join(samples, f));
     await page.waitForFunction(() => document.querySelectorAll('#layers input').length > 0 || document.querySelector('#status').className.includes('error'), null, { timeout: 240000 });
