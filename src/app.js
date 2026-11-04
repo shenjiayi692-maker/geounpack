@@ -5,6 +5,7 @@
     {
       defaultFormat: 'shp',
       maxFileMB: 150,
+      bigFileMB: 40, // above this, warn that opening/converting can take 1–2 minutes
       paywall: false, // turned on once payments are connected
       freeFeatureLimit: 1000,
       checkoutUrl: '',
@@ -55,9 +56,25 @@
     });
   }
 
+  // Progress: while busy, show elapsed seconds, plus a heads-up when the current file is large.
+  let busySince = 0;
+  let busyMsg = '';
+  let busyTimer = null;
+  let bigFileHint = '';
+  function renderBusy() {
+    const secs = Math.floor((Date.now() - busySince) / 1000);
+    status.textContent = busyMsg + (secs >= 2 ? ` (${secs} s)` : '') + bigFileHint;
+  }
   function setStatus(msg, kind) {
-    status.textContent = msg;
     status.className = 'status ' + (kind || '');
+    if (kind === 'busy') {
+      if (!busyTimer) { busySince = Date.now(); busyTimer = setInterval(renderBusy, 1000); }
+      busyMsg = msg;
+      renderBusy();
+      return;
+    }
+    if (busyTimer) { clearInterval(busyTimer); busyTimer = null; }
+    status.textContent = msg;
   }
 
   function unlocked() {
@@ -154,6 +171,9 @@
     }
     panel.hidden = true;
     mapEl.hidden = true;
+    bigFileHint = mb > CFG.bigFileMB
+      ? ` This is a large file (${mb.toFixed(0)} MB): opening and converting can take 1–2 minutes. Keep this tab open; it is still working.`
+      : '';
     setStatus(`Opening ${file.name}…`, 'busy');
     try {
       layers = await call('open', { file });
