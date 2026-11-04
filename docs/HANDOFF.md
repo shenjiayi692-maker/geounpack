@@ -27,6 +27,12 @@ Jiayi 想做“小工具 + 长尾 SEO”的独立产品。经过多轮调研（�
 - ⏳ 养号：Jiayi 刚开始注册 GIS Stack Exchange、Reddit。
 - ⛔ 不支持：栅格、瓦片、场景包；150MB 以上的文件。
 
+
+## 3.5 OpenOlder（Premiere 降级）状态（2026-11-04）
+- 仓库 `shenjiayi692-maker/openolder`，分支 `demo-v0.1`；Demo 网址 https://openolder.pages.dev（noindex 预览，Cloudflare Pages 项目 `openolder`，连 GitHub 自动部署）。
+- 转换逻辑是 prem-down（MIT）的 JavaScript 移植；15 个移植自原项目的单元测试 + 浏览器端到端测试全部通过（含线上）。
+- ⏳ 等 Jiayi 按 `openolder/docs/TEST-CHECKLIST.zh.md` 用 Creative Cloud 试用版真机测试；通过后再做完整版（06 计划第一部分 1B）。
+
 ## 4. 时间线和检查点
 - 第 1–2 周：部署 pages.dev、自测、养号（只答不推广）。
 - 第 3 周：买 geounpack.com，接自定义域名，去掉 NOINDEX，提交 Google Search Console 和 Bing 站长工具。
