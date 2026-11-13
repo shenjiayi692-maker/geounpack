@@ -89,6 +89,7 @@ const prose = JSON.parse(fs.readFileSync(path.join(src, 'prose.json'), 'utf8'));
 for (const p of prose) {
   const html = `<!doctype html><html lang="en"><head><meta charset="utf-8">${NOINDEX ? '<meta name="robots" content="noindex, nofollow">' : ''}<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${esc(p.title)} | GeoUnpack</title><meta name="description" content="${esc(p.description)}"><link rel="canonical" href="${url(p.slug)}">
+<meta property="og:title" content="${esc(p.title)} | GeoUnpack"><meta property="og:description" content="${esc(p.description)}"><meta property="og:type" content="website"><meta property="og:url" content="${url(p.slug)}"><meta property="og:site_name" content="GeoUnpack">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="/styles.css"></head><body>
 <header class="topbar"><div class="wrap topbar-in"><a class="brand" href="/"><img src="/favicon.svg" alt="" width="22" height="22">GeoUnpack</a><nav class="topnav">${nav}</nav></div></header>
 <main class="wrap prose"><h1>${esc(p.title)}</h1>${p.html}</main>
@@ -106,6 +107,6 @@ fs.writeFileSync(path.join(dist, 'sitemap.xml'),
   `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${allSlugs.map((s) => `  <url><loc>${url(s)}</loc><lastmod>${today}</lastmod></url>`).join('\n')}\n</urlset>\n`);
 fs.writeFileSync(path.join(dist, 'robots.txt'), NOINDEX ? 'User-agent: *\nDisallow: /\n' : `User-agent: *\nAllow: /\n\nSitemap: ${SITE}/sitemap.xml\n`);
 fs.writeFileSync(path.join(dist, 'llms.txt'),
-  `# GeoUnpack\n\n> Free browser-based tool to open and convert Esri ArcGIS layer packages (.lpk, .lpkx), map packages (.mpk, .mpkx) and zipped file geodatabases (.gdb) to Shapefile, GeoPackage, GeoJSON, KML and CSV without ArcGIS. Conversion runs locally in the browser with GDAL compiled to WebAssembly; files are never uploaded.\n\n## Converters\n${pages.map((p) => `- [${p.h1}](${url(p.slug)}): ${p.description}`).join('\n')}\n\n## Limits\n- Vector layers and tables only (no raster, tile or scene packages yet)\n- Files up to 150 MB\n`);
+  `# GeoUnpack\n\n> Free browser-based tool to open and convert Esri ArcGIS layer packages (.lpk, .lpkx), map packages (.mpk, .mpkx) and zipped file geodatabases (.gdb) to Shapefile, GeoPackage, GeoJSON, KML and CSV without ArcGIS. Conversion runs locally in the browser with GDAL compiled to WebAssembly; files are never uploaded.\n\n## Converters\n${pages.map((p) => `- [${p.h1}](${url(p.slug)}): ${p.description}`).join('\n')}\n\n## About\n- [About GeoUnpack](${url('about')}): who makes it, how it works, contact\n\n## Limits\n- Vector layers and tables only (no raster, tile or scene packages yet)\n- Files up to 150 MB\n`);
 
 console.log(`Built ${pages.length + prose.length} pages into dist/ for ${SITE}${NOINDEX ? ' (noindex preview)' : ''}`);

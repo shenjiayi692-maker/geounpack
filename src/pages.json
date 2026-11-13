@@ -162,6 +162,74 @@
     "from": "LPK"
   },
   {
+    "slug": "open-lpk-in-qgis",
+    "title": "How to Open an LPK File in QGIS (or Skip QGIS Entirely) | GeoUnpack",
+    "h1": "Open an LPK File in QGIS",
+    "description": "QGIS can't open an ArcGIS .lpk directly. Extract it with 7-Zip and load the .gdb, or convert it to GeoPackage in your browser first. Step-by-step, nothing uploaded.",
+    "lead": "QGIS doesn't recognise .lpk or .mpk files, but the data inside is a normal file geodatabase. Convert it to GeoPackage with the tool above and drag the result into QGIS, or unpack it by hand with the steps below.",
+    "defaultFormat": "gpkg",
+    "steps": [
+      "Fastest: drop the .lpk above, choose GPKG and click Convert & download. Drag the .gpkg into QGIS.",
+      "By hand: open the .lpk with 7-Zip (it is a 7-Zip archive; renaming it to .7z also works) and extract it.",
+      "In the extracted folder, open the 'v10', 'v106' or 'v108' subfolder and find the folder ending in .gdb.",
+      "In QGIS, drag that .gdb folder onto the map, or use Layer > Add Layer > Add Vector Layer > Directory > OpenFileGDB."
+    ],
+    "compare": [
+      [
+        "",
+        "GeoUnpack → QGIS",
+        "7-Zip + QGIS",
+        "ArcGIS Pro"
+      ],
+      [
+        "Install required",
+        "QGIS only",
+        "7-Zip and QGIS",
+        "ArcGIS Pro (paid licence)"
+      ],
+      [
+        "Steps",
+        "Drop, convert, drag",
+        "Extract, find .gdb, add",
+        "Double-click"
+      ],
+      [
+        "Keeps symbology",
+        "No",
+        "No",
+        "Yes"
+      ],
+      [
+        "Works for .mpk / .lpkx",
+        "Yes",
+        "Yes",
+        "Yes"
+      ],
+      [
+        "Files uploaded",
+        "No",
+        "No",
+        "No"
+      ]
+    ],
+    "faq": [
+      [
+        "Why can't QGIS open the .lpk directly?",
+        "An .lpk is a 7-Zip archive that bundles a file geodatabase with ArcGIS layer styling. QGIS reads the geodatabase but not the package wrapper, so it has to be extracted or converted first."
+      ],
+      [
+        "Will the styling come across?",
+        "No. Colours and labels are stored in an ArcGIS-only format. You get the geometry and attributes; restyle the layer in QGIS."
+      ],
+      [
+        "GeoPackage or Shapefile for QGIS?",
+        "GeoPackage. It keeps long field names, multiple layers in one file and has no 2 GB limit. Use Shapefile only if someone else needs it."
+      ]
+    ],
+    "subtitle": "QGIS can't read .lpk packages directly. Convert or unpack first: both ways below.",
+    "from": "LPK"
+  },
+  {
     "slug": "lpkx-to-shapefile",
     "title": "LPKX to Shapefile: Convert ArcGIS Pro Layer Packages Online | GeoUnpack",
     "h1": "LPKX to Shapefile Converter",

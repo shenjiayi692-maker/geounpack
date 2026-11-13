@@ -73,7 +73,8 @@ _最后更新 2026-11-03_
 - [ ] 结构化数据：SoftwareApplication、FAQPage、HowTo。
 - [ ] robots.txt **允许** AI 爬虫（GPTBot、PerplexityBot、Google-Extended 等）；提供 llms.txt。
 - [ ] 同时提交 Google Search Console 和 **Bing Webmaster Tools**（ChatGPT 的联网搜索依赖 Bing）。
-- [ ] 加对比表格（本工具 / MyGeodata / QGIS 手动办法），AI 摘要很喜欢引用表格。
+- [x] 加对比表格（本工具 / MyGeodata / QGIS 手动办法），AI 摘要很喜欢引用表格。（mygeodata-alternative、open-lpk-in-qgis 两页）
+- [x] “关于”页写清作者、原理、限制、联系邮箱 hello@geounpack.com（**需要在 Cloudflare Email Routing 设置转发**）；所有页面带 og 分享预览。
 - [ ] 站点地图、页面加载速度、移动端适配。
 
 ## 6. 收款与税务（开始收费前完成）
