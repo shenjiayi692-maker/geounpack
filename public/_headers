@@ -4,3 +4,7 @@
   Content-Type: application/wasm
 /worker.js
   Cache-Control: public, max-age=3600
+https://geounpack.pages.dev/*
+  X-Robots-Tag: noindex
+https://:version.geounpack.pages.dev/*
+  X-Robots-Tag: noindex

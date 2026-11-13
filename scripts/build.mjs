@@ -54,7 +54,12 @@ for (const p of pages) {
       applicationCategory: 'UtilitiesApplication', operatingSystem: 'Any (web browser)',
       url: url(p.slug), description: p.description,
       offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+      publisher: { '@id': `${SITE}/#org` },
     },
+    ...(p.slug ? [] : [
+      { '@context': 'https://schema.org', '@type': 'Organization', '@id': `${SITE}/#org`, name: 'GeoUnpack', url: `${SITE}/`, logo: `${SITE}/favicon.svg`, email: 'hello@geounpack.com' },
+      { '@context': 'https://schema.org', '@type': 'WebSite', name: 'GeoUnpack', url: `${SITE}/`, publisher: { '@id': `${SITE}/#org` } },
+    ]),
     {
       '@context': 'https://schema.org', '@type': 'FAQPage',
       mainEntity: p.faq.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })),
