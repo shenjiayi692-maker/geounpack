@@ -9,7 +9,7 @@
     "slug": "privacy",
     "title": "Privacy",
     "description": "GeoUnpack does not upload or store your files.",
-    "html": "<p><strong>Your files never leave your computer.</strong> When you open a file, it is read by code running in your browser. Nothing about the file's content is sent to us or to anyone else.</p><p>The map preview loads background map tiles from OpenStreetMap's tile servers; those requests contain only the map area being displayed, not your data.</p><p>We use Cloudflare Web Analytics, which counts page views without cookies and without tracking you across sites.</p><p>If you buy a licence in the future, payment is handled by our payment provider; we receive your email address and the purchase details only.</p>"
+    "html": "<p><strong>Your files never leave your computer.</strong> When you open a file, it is read by code running in your browser. Nothing about the file's content is sent to us or to anyone else.</p><p>The conversion engine (the open-source GDAL library, about 11 MB) is downloaded from the public jsDelivr CDN the first time you open a file, and then cached by your browser. Like any web request, that download shows jsDelivr your IP address and browser type, but nothing about your file.</p><p>The map preview loads background map tiles from OpenStreetMap's tile servers; those requests contain only the map area being displayed (and, as with any web request, your IP address), not your data.</p><p>We use Cloudflare Web Analytics, which counts page views without cookies and without tracking you across sites.</p><p>If you buy a licence in the future, payment is handled by our payment provider; we receive your email address and the purchase details only.</p>"
   },
   {
     "slug": "licenses",

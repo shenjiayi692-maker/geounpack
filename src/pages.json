@@ -30,11 +30,37 @@
       ]
     ],
     "subtitle": "Open LPK, MPK and GDB files without ArcGIS. Preview the layers and convert them to Shapefile, GeoPackage, GeoJSON, KML or CSV.",
-    "from": "ANY"
+    "from": "ANY",
+    "body": [
+      {
+        "h2": "What these Esri files are",
+        "p": [
+          "Layer packages (`.lpk`, `.lpkx`) and map packages (`.mpk`, `.mpkx`) are 7-Zip archives made by ArcMap or ArcGIS Pro. Inside is a layer or map definition plus a copy of the data, almost always a file geodatabase (`.gdb`) and sometimes shapefiles. A file geodatabase is a folder of binary tables that ArcGIS uses as its native storage.",
+          "The data itself is not locked to ArcGIS. The open-source GDAL library reads file geodatabases directly, and GeoUnpack runs GDAL inside your browser, so you get the same result as the command-line route without installing anything."
+        ]
+      },
+      {
+        "h2": "What you get, and what you don't",
+        "p": [
+          "GeoUnpack extracts the data, not the map design."
+        ],
+        "list": [
+          "Kept: geometry, all attribute fields, the coordinate system, standalone tables.",
+          "Not kept: symbology, labels, layouts, definition queries and joins. Those live in the layer or map definition, which only ArcGIS can render.",
+          "Not read yet: raster, tile and scene data, and packages that only reference data on a server instead of containing it."
+        ]
+      },
+      {
+        "h2": "Which output format to pick",
+        "p": [
+          "GeoPackage is the safest choice for QGIS and most modern GIS software: one file, long field names, no size cap. Choose Shapefile when the receiving software only accepts it, GeoJSON for web maps and code, KML for Google Earth, and CSV when you only need the attribute table in a spreadsheet."
+        ]
+      }
+    ]
   },
   {
     "slug": "lpk-to-shapefile",
-    "title": "LPK to Shapefile Converter: Convert ArcGIS Layer Package to SHP Online | GeoUnpack",
+    "title": "LPK to Shapefile Converter: ArcGIS Layer Package to SHP Online | GeoUnpack",
     "h1": "LPK to Shapefile Converter",
     "description": "Convert .lpk and .lpkx layer packages to Shapefile (.shp) online without ArcGIS. Free, runs in your browser, files are never uploaded.",
     "lead": "An .lpk file is a compressed package that holds a layer's data (usually a file geodatabase) and its styling. GeoUnpack unpacks it and exports the data as a zipped Shapefile you can open in QGIS, AutoCAD Map 3D, Global Mapper or any GIS.",
@@ -56,10 +82,41 @@
       [
         "Why are some field names shortened?",
         "The Shapefile format limits field names to 10 characters and can truncate very large numbers. If exact values matter, export to GeoPackage or GeoJSON instead."
+      ],
+      [
+        "Is this the same as ArcGIS 'Extract Package'?",
+        "It extracts the same data. The difference is that you don't need ArcGIS, and the result is converted to Shapefile (or another format) directly."
       ]
     ],
     "subtitle": "Convert ArcGIS layer packages (.lpk, .lpkx) to Shapefile. No ArcGIS needed.",
-    "from": "LPK"
+    "from": "LPK",
+    "body": [
+      {
+        "h2": "What is inside an .lpk file",
+        "p": [
+          "An `.lpk` is a 7-Zip archive. Unpacked, it holds a `.lyr` file (the symbology), an `esriinfo` folder (metadata and a thumbnail) and one or more version folders such as `v10` or `v108`, each with a file geodatabase or shapefiles containing the actual features. When a package holds the same data for several ArcGIS versions, GeoUnpack reads only the newest copy so layers are not listed twice."
+        ]
+      },
+      {
+        "h2": "What changes when you convert to Shapefile",
+        "p": [
+          "Shapefile is an old format with hard limits. GeoUnpack applies the usual workarounds and tells you about them:"
+        ],
+        "list": [
+          "Field names are cut to 10 characters. `POPULATION_2020` becomes `POPULATION` and a second similar field becomes `POPULATI_1`.",
+          "Date-and-time fields keep only the date.",
+          "Text longer than 254 characters is truncated, and very large whole numbers can lose digits.",
+          "Z values are dropped (`-dim XY`), because mixed 2D/3D geometry makes the export fail.",
+          "The coordinate system is kept as is and written to the `.prj` file; text is stored as UTF-8 with a `.cpg` file."
+        ]
+      },
+      {
+        "h2": "Shapefile or GeoPackage?",
+        "p": [
+          "If the person or program receiving the data accepts GeoPackage, use it: none of the limits above apply. Pick Shapefile for older software, for upload forms that ask for a zipped shapefile, and for AutoCAD Map 3D or Civil 3D workflows."
+        ]
+      }
+    ]
   },
   {
     "slug": "lpk-to-kml",
@@ -84,7 +141,25 @@
       ]
     ],
     "subtitle": "Convert ArcGIS layer packages to KML and open them in Google Earth.",
-    "from": "LPK"
+    "from": "LPK",
+    "body": [
+      {
+        "h2": "How the conversion works",
+        "p": [
+          "KML only supports latitude and longitude on the WGS84 datum, while layer packages are usually in a projected system such as a UTM zone or State Plane. GeoUnpack reads the layer's coordinate system from the geodatabase and reprojects every vertex to WGS84 (EPSG:4326) before writing the KML, which is why the result lands in the right place in Google Earth."
+        ]
+      },
+      {
+        "h2": "What to expect in Google Earth",
+        "p": [],
+        "list": [
+          "Every attribute is written into the feature's pop-up balloon.",
+          "Colours, line widths and labels from ArcGIS are not carried over; Google Earth applies its default style, which you can change per folder.",
+          "Google Earth Pro on a computer handles tens of thousands of features. Google My Maps is much stricter: about 2,000 features per layer and a 5 MB file limit, so export smaller layers for it.",
+          "KML is verbose. Expect the file to be several times larger than the same data as a Shapefile."
+        ]
+      }
+    ]
   },
   {
     "slug": "lpk-to-geojson",
@@ -109,7 +184,21 @@
       ]
     ],
     "subtitle": "Convert ArcGIS layer packages to GeoJSON (WGS84) for web maps and scripts.",
-    "from": "LPK"
+    "from": "LPK",
+    "body": [
+      {
+        "h2": "What the GeoJSON looks like",
+        "p": [
+          "The output is one `FeatureCollection` per layer, following RFC 7946: coordinates are longitude, latitude in WGS84, rounded to six decimals (about 10 cm on the ground). Attribute fields become `properties` with their full names, since GeoJSON has no 10-character limit. Single and multi-part geometries are written as multi-part (`MultiPolygon`, `MultiLineString`) so every feature in a layer has the same type, which keeps Leaflet, Mapbox GL and geopandas code simple."
+        ]
+      },
+      {
+        "h2": "When GeoJSON is the wrong choice",
+        "p": [
+          "GeoJSON is plain text, so a layer with detailed boundaries can reach hundreds of megabytes and become slow to load in a web map. For large layers export GeoPackage instead, or simplify the geometry afterwards with a tool such as mapshaper. If you need the original projected coordinates rather than WGS84, GeoPackage and Shapefile keep them."
+        ]
+      }
+    ]
   },
   {
     "slug": "lpk-viewer",
@@ -134,7 +223,27 @@
       ]
     ],
     "subtitle": "See the layers, attributes and map inside an .lpk file. No ArcGIS needed.",
-    "from": "LPK"
+    "from": "LPK",
+    "body": [
+      {
+        "h2": "What the viewer shows",
+        "p": [
+          "After you drop a file, GeoUnpack lists every layer and table in the package with:"
+        ],
+        "list": [
+          "the geometry type (points, lines, polygons, or a table without geometry),",
+          "the number of features,",
+          "the coordinate system as an EPSG code when the package records one,",
+          "a map preview of up to 2,000 features over OpenStreetMap; click a feature to read its attributes."
+        ]
+      },
+      {
+        "h2": "Limits of viewing without ArcGIS",
+        "p": [
+          "You see the data, not the cartography. The colours, classifications and labels the author set up are stored in the `.lyr` file inside the package, in a format only ArcGIS draws. Raster layers (imagery, elevation) are not shown. If no layers are found, the package probably references data on a server rather than containing a copy; ask the sender to re-create it with the data included."
+        ]
+      }
+    ]
   },
   {
     "slug": "open-lpk-without-arcgis",
@@ -159,7 +268,33 @@
       ]
     ],
     "subtitle": "Use the converter below, or follow one of the free manual methods further down.",
-    "from": "LPK"
+    "from": "LPK",
+    "body": [
+      {
+        "h2": "Method 1: convert it in the browser",
+        "p": [
+          "Drop the file into the tool at the top of this page. It lists the layers, previews them and exports Shapefile, GeoPackage, GeoJSON, KML or CSV. Nothing is installed and nothing is uploaded. This is the quickest route if you only need the data once."
+        ]
+      },
+      {
+        "h2": "Method 2: unpack it with 7-Zip and open it in QGIS",
+        "p": [
+          "An `.lpk` is a 7-Zip archive. Install the free 7-Zip (Windows) or Keka (Mac), right-click the file and extract it. Renaming it to `.zip` does not help, because the built-in zip tools expect zip compression; recent Windows 11 versions can open it if you rename it to `.7z`. Inside, open the version folder with the highest number (for example `v108`) and find the folder ending in `.gdb`. In QGIS, drag that folder onto the map window, or use Layer › Add Layer › Add Vector Layer with source type Directory."
+        ]
+      },
+      {
+        "h2": "Method 3: GDAL on the command line",
+        "p": [
+          "After extracting as in method 2, GDAL converts the geodatabase in one line: `ogr2ogr -f GPKG output.gpkg path/to/data.gdb`. Use `ogrinfo path/to/data.gdb` first to list the layers. This is the best option for many files or for automation."
+        ]
+      },
+      {
+        "h2": "What about ArcGIS Online or ArcGIS Earth?",
+        "p": [
+          "You can upload a layer package to ArcGIS Online as an item, but that only stores it so others can download it into ArcGIS desktop software; it is not drawn on a web map. In practice the three methods above are the ones that work without a licence."
+        ]
+      }
+    ]
   },
   {
     "slug": "open-lpk-in-qgis",
@@ -227,7 +362,30 @@
       ]
     ],
     "subtitle": "QGIS can't read .lpk packages directly. Convert or unpack first: both ways below.",
-    "from": "LPK"
+    "from": "LPK",
+    "body": [
+      {
+        "h2": "The manual way, step by step",
+        "p": [],
+        "list": [
+          "Install 7-Zip (Windows) or Keka (Mac). Right-click the `.lpk` or `.mpk` and extract it. Renaming to `.zip` does not work, because the archive uses 7-Zip compression.",
+          "Open the extracted folder. You will see `esriinfo`, a `.lyr` or `.mxd` file, and version folders such as `v10` and `v108`. Go into the highest version.",
+          "Find the folder whose name ends in `.gdb`. That is the file geodatabase.",
+          "In QGIS choose Layer › Add Layer › Add Vector Layer, set Source type to Directory, pick OpenFileGDB, browse to the `.gdb` folder and click Add. Or simply drag the `.gdb` folder onto the QGIS window.",
+          "Tick the layers you want in the dialog that appears."
+        ]
+      },
+      {
+        "h2": "Common problems",
+        "p": [],
+        "list": [
+          "“Invalid data source”: you selected a file inside the `.gdb` folder instead of the folder itself.",
+          "Every layer appears twice: you loaded the geodatabases from two version folders. Use only the newest.",
+          "Layers load but are empty or missing: the package references data that was not included, or the layer is a raster.",
+          "The `.lyr` file does nothing in QGIS: it is Esri's symbology format. You will need to style the layer again."
+        ]
+      }
+    ]
   },
   {
     "slug": "lpkx-to-shapefile",
@@ -252,7 +410,25 @@
       ]
     ],
     "subtitle": "Convert ArcGIS Pro layer packages (.lpkx) to Shapefile, GeoPackage or GeoJSON.",
-    "from": "LPKX"
+    "from": "LPKX",
+    "body": [
+      {
+        "h2": "How .lpkx differs from .lpk",
+        "p": [
+          "ArcGIS Pro writes `.lpkx`; ArcMap wrote `.lpk`. Both are 7-Zip archives, but an `.lpkx` stores the layer definition as a `.lyrx` file (JSON) and puts the data in folders named after the Pro version, such as `p20` or `p30`, alongside `commondata`. The data is still a file geodatabase, so it converts the same way."
+        ]
+      },
+      {
+        "h2": "Things to know before converting",
+        "p": [],
+        "list": [
+          "ArcGIS Pro layer names and field names are often long. Shapefile cuts field names to 10 characters; choose GeoPackage if you want them intact.",
+          "3D layers lose their Z values in Shapefile export. GeoPackage and GeoJSON keep them.",
+          "An `.lpkx` made from a raster, mosaic, scene or tile layer has no vector data to export, and GeoUnpack will tell you so.",
+          "Packages created with “reference all data” contain only pointers to a network drive or enterprise database; ask the author to share it with the data included."
+        ]
+      }
+    ]
   },
   {
     "slug": "mpk-viewer",
@@ -277,7 +453,25 @@
       ]
     ],
     "subtitle": "Open ArcGIS map packages (.mpk, .mpkx) and browse every layer they contain.",
-    "from": "MPK"
+    "from": "MPK",
+    "body": [
+      {
+        "h2": "What is inside a map package",
+        "p": [
+          "A map package is a 7-Zip archive holding the map document (`.mxd` for ArcMap `.mpk`, `.mapx` for ArcGIS Pro `.mpkx`) and a copy of the data for every layer in the map. The data usually sits in one or more file geodatabases, sometimes next to loose shapefiles, and is often duplicated for different ArcGIS versions. GeoUnpack scans all of it, keeps the newest copy, and shows one row per layer or table, labelled with the geodatabase it comes from when there are several."
+        ]
+      },
+      {
+        "h2": "What you can and cannot see",
+        "p": [],
+        "list": [
+          "You can see every vector layer, its feature count and coordinate system, and preview it on a map.",
+          "You can see standalone and related tables, including attachment tables (names ending in `__ATTACH`).",
+          "You cannot see the map layout, layer order, symbology or labels; those are in the map document, which only ArcGIS opens.",
+          "Basemaps are not in the package at all. They are online services the map pointed to."
+        ]
+      }
+    ]
   },
   {
     "slug": "mpk-to-shapefile",
@@ -302,28 +496,27 @@
       ]
     ],
     "subtitle": "Export every layer in an ArcGIS map package to Shapefile in one download.",
-    "from": "MPK"
-  },
-  {
-    "slug": "layer-package-to-shapefile",
-    "title": "ArcGIS Layer Package to Shapefile: Free Online Converter | GeoUnpack",
-    "h1": "Layer Package to Shapefile",
-    "description": "Convert an ArcGIS layer package (.lpk/.lpkx) to Shapefile without ArcGIS or ArcGIS Pro. Free, browser-based, private.",
-    "lead": "Someone sent you a layer package and you need plain Shapefiles? Drop it below. No ArcGIS licence, no installation, no upload.",
-    "defaultFormat": "shp",
-    "steps": [
-      "Drop the layer package into the box.",
-      "Select the layer.",
-      "Choose 'SHP (Shapefile)' and click Convert & download."
-    ],
-    "faq": [
-      [
-        "Is this the same as ArcGIS 'Extract Package'?",
-        "It extracts the same data. The difference is that you don't need ArcGIS, and the result is converted to Shapefile (or another format) directly."
-      ]
-    ],
-    "subtitle": "Convert an ArcGIS layer package to plain Shapefiles. No licence, no install.",
-    "from": "LPK"
+    "from": "MPK",
+    "body": [
+      {
+        "h2": "Exporting several layers at once",
+        "p": [
+          "Tick as many layers as you need and click Convert. GeoUnpack writes one Shapefile per layer and puts them in a single `.zip`, with one folder per layer holding its `.shp`, `.shx`, `.dbf`, `.prj` and `.cpg` files. Tables without geometry cannot be Shapefiles, so they are added to the same download as CSV."
+        ]
+      },
+      {
+        "h2": "Why Shapefile needs one file per layer",
+        "p": [
+          "A Shapefile stores a single layer with a single geometry type, which is why a map package with ten layers becomes ten Shapefiles. Relationships between layers and tables are not preserved, though the key fields they were built on are still in the attribute tables, so you can re-create joins in QGIS. If the receiving software accepts it, export GeoPackage instead: you still get one file per layer, but each is a single `.gpkg` rather than five sidecar files, with none of the limits below."
+        ]
+      },
+      {
+        "h2": "Field and value limits",
+        "p": [
+          "Field names are shortened to 10 characters, date-times keep only the date, and text over 254 characters is cut. The message shown after export reminds you of these."
+        ]
+      }
+    ]
   },
   {
     "slug": "gdb-to-shapefile",
@@ -348,7 +541,32 @@
       ]
     ],
     "subtitle": "Convert file geodatabase feature classes to Shapefile. Zip the .gdb folder first.",
-    "from": "GDB"
+    "from": "GDB",
+    "body": [
+      {
+        "h2": "How to zip a file geodatabase correctly",
+        "p": [
+          "A file geodatabase looks like a folder named `something.gdb` full of files such as `a00000001.gdbtable`. Zip the folder itself, not the files inside it: on Windows right-click the `.gdb` folder and choose Send to › Compressed (zipped) folder; on a Mac right-click and choose Compress. A `.zip` you downloaded from an open-data portal is usually already in the right shape and can be dropped in as it is."
+        ]
+      },
+      {
+        "h2": "What converts and what doesn't",
+        "p": [],
+        "list": [
+          "Feature classes, including those inside feature datasets, are listed as layers.",
+          "Standalone tables are listed and export as CSV.",
+          "Domains and subtypes are not applied: you get the stored codes, not the descriptions.",
+          "Topologies, network datasets, relationship classes and raster datasets are skipped.",
+          "Personal geodatabases (`.mdb`) and enterprise geodatabase connections (`.sde`) are different formats and are not supported."
+        ]
+      },
+      {
+        "h2": "Shapefile limits to keep in mind",
+        "p": [
+          "Geodatabase field names can be 64 characters; Shapefile allows 10, so long names are shortened. Shapefiles also top out at 2 GB per file and drop the time part of date fields. For anything large or with long field names, GeoPackage is the better target."
+        ]
+      }
+    ]
   },
   {
     "slug": "gdb-to-kml",
@@ -369,7 +587,26 @@
       ]
     ],
     "subtitle": "Convert file geodatabase feature classes to KML for Google Earth.",
-    "from": "GDB"
+    "from": "GDB",
+    "body": [
+      {
+        "h2": "From geodatabase to Google Earth",
+        "p": [
+          "Feature classes in a file geodatabase are usually stored in a projected coordinate system. KML needs WGS84 latitude and longitude, so GeoUnpack reprojects each feature class during export. Zip the `.gdb` folder, drop it in, tick a feature class, choose KML and open the downloaded file in Google Earth."
+        ]
+      },
+      {
+        "h2": "Practical tips",
+        "p": [],
+        "list": [
+          "Export one feature class per KML file; it keeps Google Earth's Places panel readable.",
+          "Attributes appear in each feature's balloon. Coded-value domains show as codes, not descriptions.",
+          "For Google My Maps, stay under about 2,000 features and 5 MB per file.",
+          "Need a `.kmz`? It is simply a zipped KML: zip the file and rename the extension to `.kmz`.",
+          "If a feature class has no coordinate system defined, reprojection is not possible; export it as Shapefile and assign the system in a GIS first."
+        ]
+      }
+    ]
   },
   {
     "slug": "gdb-to-geojson",
@@ -390,7 +627,21 @@
       ]
     ],
     "subtitle": "Convert file geodatabase feature classes to GeoJSON (WGS84).",
-    "from": "GDB"
+    "from": "GDB",
+    "body": [
+      {
+        "h2": "What you get",
+        "p": [
+          "Each feature class becomes one GeoJSON `FeatureCollection` in WGS84 longitude/latitude with six-decimal precision, as RFC 7946 requires. Field names are kept in full. If you tick several feature classes they are delivered together in one `.zip`, one `.geojson` per feature class."
+        ]
+      },
+      {
+        "h2": "Using the result in code",
+        "p": [
+          "The files load directly with `L.geoJSON()` in Leaflet, as a `geojson` source in Mapbox GL or MapLibre, and with `geopandas.read_file()` in Python. Geodatabase date fields are written as ISO 8601 strings, and coded-value domains come through as their stored codes. For feature classes with hundreds of thousands of features, GeoJSON gets large and slow; GeoPackage is the better exchange format in that case, and geopandas reads it the same way."
+        ]
+      }
+    ]
   },
   {
     "slug": "gdb-to-csv",
@@ -415,7 +666,26 @@
       ]
     ],
     "subtitle": "Export geodatabase attribute tables to CSV for Excel or Google Sheets.",
-    "from": "GDB"
+    "from": "GDB",
+    "body": [
+      {
+        "h2": "What the CSV contains",
+        "p": [
+          "One row per feature and one column per attribute field, with the field names in the first row. For feature classes, an extra first column named `WKT` holds the geometry as text, for example `POINT (-75.16 39.95)`, in the layer's original coordinate system. Standalone tables have no geometry and export exactly as stored."
+        ]
+      },
+      {
+        "h2": "Opening it in Excel",
+        "p": [],
+        "list": [
+          "The file is UTF-8. If accented letters look wrong after a double-click, use Data › From Text/CSV in Excel and pick 65001: Unicode (UTF-8).",
+          "Excel shows at most 1,048,576 rows. Larger tables are complete in the file but Excel will not display them all.",
+          "Excel may turn long ID numbers into scientific notation or drop leading zeros; import those columns as Text.",
+          "Polygon WKT can exceed Excel's 32,767-character cell limit. If you only need attributes, delete the `WKT` column or ignore it.",
+          "Coded-value domains appear as codes, not descriptions."
+        ]
+      }
+    ]
   },
   {
     "slug": "mygeodata-alternative",
@@ -474,6 +744,20 @@
       ]
     ],
     "subtitle": "An alternative to cloud GIS converters for Esri packages: nothing is uploaded.",
-    "from": "ANY"
+    "from": "ANY",
+    "body": [
+      {
+        "h2": "Why local conversion matters",
+        "p": [
+          "Many Esri packages people need to convert are not theirs to share: parcel data from a client, utility networks, unpublished survey results, data under a licence or a non-disclosure agreement. Uploading such a file to any third-party server can breach those terms, however trustworthy the service is. GeoUnpack avoids the question, because the file is read by code running in your own browser tab and is never sent anywhere. You can confirm this in your browser's developer tools: the Network tab shows no upload."
+        ]
+      },
+      {
+        "h2": "Where GeoUnpack is narrower",
+        "p": [
+          "GeoUnpack does one job: getting vector data out of `.lpk`, `.lpkx`, `.mpk`, `.mpkx` and zipped `.gdb` files. General cloud converters cover far more formats, handle rasters, offer coordinate-system options and can process files larger than a browser's memory allows. If you need those, a cloud converter or desktop QGIS is the right tool."
+        ]
+      }
+    ]
   }
 ]

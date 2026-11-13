@@ -76,6 +76,8 @@ _最后更新 2026-11-03_
 - [x] 加对比表格（本工具 / MyGeodata / QGIS 手动办法），AI 摘要很喜欢引用表格。（mygeodata-alternative、open-lpk-in-qgis 两页）
 - [x] “关于”页写清作者、原理、限制、联系邮箱 hello@geounpack.com（**需要在 Cloudflare Email Routing 设置转发**）；所有页面带 og 分享预览。
 - [ ] 站点地图、页面加载速度、移动端适配。
+- [x] 2026-11-13 审查后的改动：`404.html`（避免软 404）；每个落地页在 `src/pages.json` 的 `body` 字段里有 110–210 词的独有内容（新增页面时必须写 `body`，不能只写导语）；`layer-package-to-shapefile` 并入 `lpk-to-shapefile`（`public/_redirects` 做 301）；分享预览图 `public/og.png`；标题超过 60 字符时自动去掉品牌后缀；sitemap 的 lastmod 用内容更新日期（`scripts/build.mjs` 里的 `CONTENT_UPDATED`，或每页的 `updated` 字段），**改了页面内容要手动更新这个日期**。
+- [x] 2026-11-13 修复：引擎崩溃后按钮恢复可用；同一个文件可以重新选择；同名图层导出不再互相覆盖；导出文件名保留中文等非英文字符；隐私页写明 jsDelivr；工具下方加了“文件打不开？告诉我们”的邮件链接。
 
 ## 6. 收款与税务（开始收费前完成）
 - [ ] Stripe 账号、产品和价格、Checkout 结账页、成功后的授权发放。

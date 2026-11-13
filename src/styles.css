@@ -120,3 +120,6 @@ body { font-size: 15.5px; }
 .linkgrid a:hover { color: var(--link); }
 .footer { background: var(--bg); border-top: 1px solid var(--line); }
 @media (max-width: 560px) { .hero { padding-top: 32px; } .drop { padding: 32px 12px; } }
+
+.report { text-align: center; margin: 12px 0 0; }
+.notfound { text-align: center; padding: 60px 0; }

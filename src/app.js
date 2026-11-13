@@ -44,7 +44,20 @@
       if (m.type === 'error') p.reject(new Error(m.error));
       else p.resolve(m.result);
     };
-    worker.onerror = (e) => setStatus('Something went wrong in the converter: ' + (e.message || 'unknown error'), 'error');
+    worker.onerror = (e) => {
+      // The engine crashed (usually out of memory) or failed to load. Fail every waiting request so the
+      // buttons come back, and start a fresh worker next time.
+      const msg = /importScripts|NetworkError|Failed to load/i.test(e.message || '')
+        ? 'The conversion engine could not be downloaded. Check your connection (or a network filter blocking cdn.jsdelivr.net) and try again.'
+        : 'The converter stopped unexpectedly, most likely because the browser ran out of memory. Please open the file again and export one layer at a time.';
+      try { worker.terminate(); } catch (_) { /* ignore */ }
+      worker = null;
+      const waiting = [...pending.values()];
+      pending.clear();
+      if (waiting.length) waiting.forEach((p) => p.reject(new Error(msg)));
+      else setStatus(msg, 'error');
+      panel.hidden = true; // layers belonged to the dead worker
+    };
     return worker;
   }
 
@@ -152,6 +165,13 @@
     return s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   }
 
+  // File name shown to the user: keep non-English letters, drop only characters Windows/macOS reject.
+  function niceName(s) { return String(s).replace(/[\\/:*?"<>|\u0000-\u001f]+/g, '_').replace(/^\.+/, '') || 'layer'; }
+  // GDAL writes files named after an ASCII-safe layer name; swap that prefix for the readable one.
+  function outFileName(fileName, safeLayer, nice) {
+    return fileName.startsWith(safeLayer) ? nice + fileName.slice(safeLayer.length) : fileName;
+  }
+
   function download(name, bytes, mime) {
     const blob = new Blob([bytes], { type: mime || 'application/octet-stream' });
     const a = document.createElement('a');
@@ -199,19 +219,26 @@
     exportBtn.disabled = true;
     try {
       const zipEntries = {};
+      const usedFolders = new Set();
       for (const l of sel) {
         const fmt = !l.geometryType ? 'csv' : format;
         const limit = !isUnlocked && l.featureCount > CFG.freeFeatureLimit ? CFG.freeFeatureLimit : undefined;
         const r = await call('export', { source: l.source, layer: l.name, format: fmt, limit, hasGeometry: !!l.geometryType });
+        const nice = niceName(l.name);
         if (r.files.length === 1 && sel.length === 1) {
-          download(r.files[0].name.includes('.') ? r.files[0].name : `${r.layer}.${r.ext}`, r.files[0].bytes);
+          const f = r.files[0];
+          download(f.name.includes('.') ? outFileName(f.name, r.layer, nice) : `${nice}.${r.ext}`, f.bytes);
         } else {
-          for (const f of r.files) zipEntries[`${r.layer}/${f.name}`] = new Uint8Array(f.bytes);
+          // one folder per layer; two layers with the same name (from different geodatabases) must not overwrite each other
+          let folder = nice;
+          for (let n = 2; usedFolders.has(folder.toLowerCase()); n++) folder = `${nice}_${n}`;
+          usedFolders.add(folder.toLowerCase());
+          for (const f of r.files) zipEntries[`${folder}/${outFileName(f.name, r.layer, nice)}`] = new Uint8Array(f.bytes);
         }
       }
       if (Object.keys(zipEntries).length) {
         const zipped = fflate.zipSync(zipEntries, { level: 6 });
-        download(sel.length === 1 ? `${sel[0].name}_${format}.zip` : `geounpack_export_${format}.zip`, zipped, 'application/zip');
+        download(sel.length === 1 ? `${niceName(sel[0].name)}_${format}.zip` : `geounpack_export_${format}.zip`, zipped, 'application/zip');
       }
       let msg = 'Done. Check your downloads folder.';
       if (format === 'shp') msg += ' Note: Shapefile field names are limited to 10 characters and very large numbers can be truncated; use GeoPackage or GeoJSON if exact values matter.';
@@ -227,7 +254,11 @@
   // events
   drop.addEventListener('click', () => input.click());
   drop.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); input.click(); } });
-  input.addEventListener('change', () => handleFile(input.files[0]));
+  input.addEventListener('change', () => {
+    const f = input.files[0];
+    input.value = ''; // so choosing the same file again (e.g. to retry) still fires 'change'
+    handleFile(f);
+  });
   ['dragenter', 'dragover'].forEach((ev) => drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.add('over'); }));
   ['dragleave', 'drop'].forEach((ev) => drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.remove('over'); }));
   drop.addEventListener('drop', (e) => handleFile(e.dataTransfer.files[0]));
