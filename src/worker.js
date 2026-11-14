@@ -4,12 +4,18 @@
  * Nothing is uploaded anywhere.
  */
 /* global importScripts, SevenZip, initGdalJs */
-// GDAL's WebAssembly file (~28 MB) is larger than Cloudflare Pages' 25 MB per-file limit,
-// so it is loaded from the jsDelivr CDN (same unmodified npm package). '?gdal=local' uses /vendor.
-const GDAL_BASE = new URL(self.location.href).searchParams.get('gdal') === 'local'
-  ? '/vendor'
-  : 'https://cdn.jsdelivr.net/npm/gdal3.js@2.8.1/dist/package';
-importScripts('/vendor/7zz.umd.js', `${GDAL_BASE}/gdal3.js`);
+// GDAL's WebAssembly file (~28 MB) is larger than Cloudflare Pages' 25 MB per-file limit, so the
+// unmodified npm package files are served from our own Cloudflare R2 bucket (cdn.geounpack.com),
+// with the jsDelivr CDN as a backup if that fails. '?gdal=local' uses /vendor (offline testing).
+const GDAL_SOURCES = new URL(self.location.href).searchParams.get('gdal') === 'local'
+  ? ['/vendor']
+  : ['https://cdn.geounpack.com/gdal3.js@2.8.1', 'https://cdn.jsdelivr.net/npm/gdal3.js@2.8.1/dist/package'];
+importScripts('/vendor/7zz.umd.js');
+let GDAL_BASE = '';
+for (const base of GDAL_SOURCES) {
+  try { importScripts(`${base}/gdal3.js`); GDAL_BASE = base; break; } catch (_) { /* try the next source */ }
+}
+if (!GDAL_BASE) throw new Error('Failed to load the conversion engine (importScripts)');
 
 let gdal = null;
 let sources = []; // [{id, path (in GDAL FS), label, dataset}]

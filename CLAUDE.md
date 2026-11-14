@@ -11,7 +11,7 @@ Static website that opens Esri `.lpk/.lpkx/.mpk/.mpkx` and zipped `.gdb` files *
 - Every SEO page must be a working tool page generated from `src/pages.json`; no bulk text-only articles.
 - No "Esri", "ArcGIS" etc. in domain/brand/logo; keep the non-affiliation footer.
 - Keep open-source attribution in `src/prose.json` (licenses page) in sync with dependencies.
-- GDAL wasm (28 MB) is loaded from jsDelivr (`gdal3.js@2.8.1`) because Cloudflare Pages caps files at 25 MB. If you bump the version, update the URL in `src/worker.js` and the licenses page.
+- GDAL wasm (28 MB) is served from the Cloudflare R2 bucket `geounpack-engine` at `https://cdn.geounpack.com/gdal3.js@2.8.1/` (jsDelivr is the automatic backup) because Cloudflare Pages caps files at 25 MB. If you bump the version, upload the three files (`gdal3.js`, `gdal3WebAssembly.wasm`, `gdal3WebAssembly.data`) to a new versioned folder in the bucket, then update the URLs in `src/worker.js` and the licenses page.
 - `docs/DEV_NOTES.zh.md` is the dev checklist; tick/update it when you change behaviour.
 
 ## Commands

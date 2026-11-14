@@ -66,7 +66,7 @@ for (const p of pages) {
       publisher: { '@id': `${SITE}/#org` },
     },
     ...(p.slug ? [] : [
-      { '@context': 'https://schema.org', '@type': 'Organization', '@id': `${SITE}/#org`, name: 'GeoUnpack', url: `${SITE}/`, logo: `${SITE}/favicon.svg`, email: 'hello@geounpack.com' },
+      { '@context': 'https://schema.org', '@type': 'Organization', '@id': `${SITE}/#org`, name: 'GeoUnpack', url: `${SITE}/`, logo: `${SITE}/favicon.svg`, email: 'hello@geounpack.com', sameAs: ['https://github.com/shenjiayi692-maker'] },
       { '@context': 'https://schema.org', '@type': 'WebSite', name: 'GeoUnpack', url: `${SITE}/`, publisher: { '@id': `${SITE}/#org` } },
     ]),
     {

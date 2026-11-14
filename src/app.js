@@ -48,7 +48,7 @@
       // The engine crashed (usually out of memory) or failed to load. Fail every waiting request so the
       // buttons come back, and start a fresh worker next time.
       const msg = /importScripts|NetworkError|Failed to load/i.test(e.message || '')
-        ? 'The conversion engine could not be downloaded. Check your connection (or a network filter blocking cdn.jsdelivr.net) and try again.'
+        ? 'The conversion engine could not be downloaded. Check your connection (or a network filter blocking cdn.geounpack.com) and try again.'
         : 'The converter stopped unexpectedly, most likely because the browser ran out of memory. Please open the file again and export one layer at a time.';
       try { worker.terminate(); } catch (_) { /* ignore */ }
       worker = null;
