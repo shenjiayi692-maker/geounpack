@@ -266,6 +266,10 @@
       [
         "Can I edit the data?",
         "Once exported to Shapefile or GeoPackage you can edit it in any GIS. The original .lpk is not changed."
+      ],
+      [
+        "ArcMap says “Invalid package. Error reading package contents.” Will this still work?",
+        "Often, yes. That message comes from the ArcGIS package handler, for example when the package was made in a newer ArcGIS version. GeoUnpack reads the archive without it. It cannot help if the download is incomplete or the package contains no vector data."
       ]
     ],
     "subtitle": "Use the converter below, or follow one of the free manual methods further down.",
@@ -280,7 +284,7 @@
       {
         "h2": "Method 2: unpack it with 7-Zip and open it in QGIS",
         "p": [
-          "An `.lpk` is a 7-Zip archive. Install the free 7-Zip (Windows) or Keka (Mac), right-click the file and extract it. Renaming it to `.zip` does not help, because the built-in zip tools expect zip compression; recent Windows 11 versions can open it if you rename it to `.7z`. Inside, open the version folder with the highest number (for example `v108`) and find the folder ending in `.gdb`. In QGIS, drag that folder onto the map window, or use Layer › Add Layer › Add Vector Layer with source type Directory."
+          "An `.lpk` is a 7-Zip archive. Install the free 7-Zip (Windows) or Keka (Mac), right-click the file and extract it. Renaming it to `.zip` does not help: Windows reports “The Compressed (zipped) Folder … is invalid”, because the built-in zip tools expect zip compression; recent Windows 11 versions can open it if you rename it to `.7z`. Inside, open the version folder with the highest number (for example `v108`) and find the folder ending in `.gdb`. In QGIS, drag that folder onto the map window, or use Layer › Add Layer › Add Vector Layer with source type Directory."
         ]
       },
       {
@@ -370,7 +374,7 @@
         "h2": "The manual way, step by step",
         "p": [],
         "list": [
-          "Install 7-Zip (Windows) or Keka (Mac). Right-click the `.lpk` or `.mpk` and extract it. Renaming to `.zip` does not work, because the archive uses 7-Zip compression.",
+          "Install 7-Zip (Windows) or Keka (Mac). Right-click the `.lpk` or `.mpk` and extract it. Renaming to `.zip` does not work: Windows answers “The Compressed (zipped) Folder … is invalid”, because the package is a 7-Zip archive.",
           "Open the extracted folder. You will see `esriinfo`, a `.lyr` or `.mxd` file, and version folders such as `v10` and `v108`. Go into the highest version.",
           "Find the folder whose name ends in `.gdb`. That is the file geodatabase.",
           "In QGIS choose Layer › Add Layer › Add Vector Layer, set Source type to Directory, pick OpenFileGDB, browse to the `.gdb` folder and click Add. Or simply drag the `.gdb` folder onto the QGIS window.",
@@ -381,11 +385,179 @@
         "h2": "Common problems",
         "p": [],
         "list": [
-          "“Invalid data source”: you selected a file inside the `.gdb` folder instead of the folder itself.",
+          "“Invalid Data Source: … is not a valid or recognized data source”: you selected a file inside the `.gdb` folder instead of the folder itself, or dragged in the `.lpk` itself. QGIS needs the extracted `.gdb` folder.",
           "Every layer appears twice: you loaded the geodatabases from two version folders. Use only the newest.",
           "Layers load but are empty or missing: the package references data that was not included, or the layer is a raster.",
           "The `.lyr` file does nothing in QGIS: it is Esri's symbology format. You will need to style the layer again."
         ]
+      }
+    ],
+    "updated": "2026-11-21"
+  },
+  {
+    "slug": "error-reading-package-contents",
+    "title": "Error Reading Package Contents (LPK/MPK): What to Try | GeoUnpack",
+    "h1": "“Error Reading Package Contents”",
+    "description": "ArcMap says “Invalid package. Error reading package contents.” when opening an .lpk or .mpk? See the usual causes, and get the data out in your browser without ArcGIS.",
+    "lead": "This message comes from the ArcGIS package handler, not from the data itself. Drop the package below: GeoUnpack opens it without the ArcGIS file handler and lists the layers inside.",
+    "subtitle": "ArcGIS won’t open the package? Check the causes below, or extract the layers here.",
+    "from": "ANY",
+    "defaultFormat": "gpkg",
+    "steps": [
+      "Drop the .lpk, .mpk, .lpkx or .mpkx that ArcGIS refused into the box below.",
+      "Wait for the layer list. If layers appear, the package itself is fine and the problem was on the ArcGIS side.",
+      "Choose GeoPackage, Shapefile or another format and click Convert & download.",
+      "If GeoUnpack can’t open it either, the file is probably incomplete: download it again or ask the sender for a new copy."
+    ],
+    "faq": [
+      [
+        "Does “Error reading package contents” mean the file is broken?",
+        "Not necessarily. Esri lists version differences, a blocked or misconfigured file handler and folder permissions as causes. If GeoUnpack lists the layers, the package itself is readable."
+      ],
+      [
+        "Can I get the symbology or the map layout back?",
+        "No. GeoUnpack exports geometry and attributes only. Styling, labels and the .mxd or .mapx layout need ArcGIS."
+      ],
+      [
+        "Is the package uploaded anywhere?",
+        "No. It is unpacked and converted inside your browser; nothing is sent to a server."
+      ]
+    ],
+    "body": [
+      {
+        "h2": "What the message means",
+        "p": [
+          "In ArcMap (ArcGIS Desktop) the exact text is usually `Invalid package` followed by `Error reading package contents.` It appears when the ArcGIS package handler (`ArcGISFileHandler.exe`) cannot unpack a layer or map package. Esri’s support articles name several causes: the package was made in a newer ArcGIS version, or one with service packs the recipient lacks; the unpacking folder is not writable or the Documents folder is redirected; or, in ArcMap 10.8.2, Windows Security’s Controlled folder access blocks the handler. Note also that ArcMap cannot open the newer .lpkx and .mpkx packages from ArcGIS Pro at all."
+        ],
+        "list": []
+      },
+      {
+        "h2": "Fixes to try in ArcGIS first",
+        "p": [],
+        "list": [
+          "Save the package to a local drive, then right-click it in ArcCatalog and choose Unpack, or use the Extract Package tool.",
+          "Ask which ArcGIS version made the package. Opening it in the same or a newer version is the reliable route.",
+          "If Windows Security reports “Controlled folder access blocked ArcGISFileHandler.exe”, allow that app (administrator rights needed).",
+          "Run `ArcGISFileHandler.exe` and set a package location you can write to."
+        ]
+      },
+      {
+        "h2": "What GeoUnpack can and cannot fix",
+        "p": [
+          "GeoUnpack does not use the ArcGIS handler. It opens the package as a 7-Zip archive and reads the file geodatabase or shapefiles inside with GDAL, so version mismatches, blocked handlers and folder settings don’t matter. It cannot help when the download is truncated or corrupted, when the package holds only rasters or tiles, or when the package only references data on a server or enterprise geodatabase instead of including it: in that case the data simply isn’t in the file."
+        ],
+        "list": []
+      }
+    ],
+    "updated": "2026-11-21"
+  },
+  {
+    "slug": "qgis-gdb-not-a-valid-data-source",
+    "title": "QGIS: GDB “Is Not a Valid or Recognized Data Source” Fix | GeoUnpack",
+    "h1": "QGIS: “Is Not a Valid or Recognized Data Source”",
+    "description": "QGIS says a .gdb or .lpk “is not a valid or recognized data source”? Learn the common causes, the right way to add a file geodatabase, and a browser converter to GeoPackage.",
+    "lead": "QGIS shows this message when no driver can read what you gave it. Often the fix is just choosing the .gdb folder the right way; if not, convert the data to GeoPackage below and drag that into QGIS.",
+    "subtitle": "QGIS won’t load the geodatabase or package? Check the causes, or convert it to GeoPackage here.",
+    "from": "GDB",
+    "defaultFormat": "gpkg",
+    "steps": [
+      "Zip the whole .gdb folder (right-click › Compress or Send to › Compressed folder). For an .lpk or .mpk, use the file as it is.",
+      "Drop the .zip or the package into the box below and wait for the layer list.",
+      "Keep GeoPackage selected and click Convert & download.",
+      "Drag the .gpkg file into QGIS. All layers and long field names are kept."
+    ],
+    "faq": [
+      [
+        "Why does QGIS show this for an .lpk or .mpk file?",
+        "QGIS has no driver for Esri package files, so it treats them as unknown. Extract the .gdb from the package first, or convert the package to GeoPackage with the tool above."
+      ],
+      [
+        "Will converting fix a geodatabase that holds rasters?",
+        "No. GeoUnpack exports vector layers and tables only. For raster datasets inside a .gdb, use a QGIS build with GDAL 3.7 or newer, or ArcGIS."
+      ],
+      [
+        "Do I lose anything by converting to GeoPackage?",
+        "Geometry, attributes and the coordinate system are kept. Symbology, labels and other ArcGIS layer settings are not, so you restyle the layers in QGIS."
+      ]
+    ],
+    "body": [
+      {
+        "h2": "The exact message",
+        "p": [
+          "In the QGIS message bar or log it reads `Invalid Data Source: /path/to/name.gdb is not a valid or recognized data source.` It is QGIS’s general message for “no driver could open this”, so the cause is not always the geodatabase itself."
+        ],
+        "list": []
+      },
+      {
+        "h2": "Common causes",
+        "p": [],
+        "list": [
+          "You picked a file inside the `.gdb` folder (such as a `.gdbtable`), or used the File source type. Use Layer › Add Layer › Add Vector Layer, set Source type to Directory, choose OpenFileGDB and select the `.gdb` folder itself.",
+          "You dragged in an `.lpk`, `.mpk` or a `.zip` that wraps the folder in another folder. QGIS needs the extracted `.gdb`.",
+          "The geodatabase holds raster datasets. GDAL, which QGIS uses, reads file geodatabase rasters only from version 3.7; check Help › About for your GDAL version.",
+          "On macOS, a QGIS bug report (#18178) describes this error for a `.gdb` on an external exFAT drive that opened after copying it to another drive.",
+          "The folder is incomplete, for example copied without all its files, or still being synced."
+        ]
+      },
+      {
+        "h2": "What GeoUnpack can and cannot fix",
+        "p": [
+          "If the problem is the package wrapper or the way the folder was added, GeoUnpack gets you a clean GeoPackage that QGIS always opens. It runs its own copy of GDAL in your browser, so an older GDAL in your QGIS install doesn’t matter for vector layers. It cannot recover a damaged or incomplete geodatabase, and it does not export rasters."
+        ],
+        "list": []
+      }
+    ],
+    "updated": "2026-11-21"
+  },
+  {
+    "slug": "compressed-zipped-folder-is-invalid-lpk",
+    "title": "“Compressed (Zipped) Folder Is Invalid” for LPK or MPK Files | GeoUnpack",
+    "h1": "“The Compressed (Zipped) Folder Is Invalid” for .lpk and .mpk",
+    "description": "Renamed an .lpk or .mpk to .zip and Windows says the compressed (zipped) folder is invalid? These packages are 7-Zip archives. Open them with 7-Zip or convert them in your browser.",
+    "lead": "Esri layer and map packages are usually 7-Zip archives, not zip files, so renaming them to .zip makes Windows refuse them. Drop the original file below to get the layers out without renaming anything.",
+    "subtitle": "Windows won’t open the renamed package? Drop the original file here instead.",
+    "from": "ANY",
+    "defaultFormat": "shp",
+    "steps": [
+      "Rename the file back to its original extension (.lpk, .lpkx, .mpk or .mpkx). GeoUnpack also accepts it as .zip or .7z, but the original name is safest.",
+      "Drop it into the box below. GeoUnpack unpacks the 7-Zip archive in your browser.",
+      "Pick the layers and an output format, then click Convert & download."
+    ],
+    "faq": [
+      [
+        "Is my package damaged?",
+        "Usually not. Windows’ built-in zip tool cannot read 7-Zip archives and reports them as invalid. If 7-Zip or GeoUnpack can open the file, it is fine."
+      ],
+      [
+        "Can I rename it to .7z instead?",
+        "Recent Windows 11 versions can open .7z archives in File Explorer, and 7-Zip (Windows) or Keka (Mac) open the file without any renaming."
+      ],
+      [
+        "What will I find inside?",
+        "A file geodatabase (.gdb folder) or shapefiles inside version folders such as v10 or v108, plus Esri layer or map files that only ArcGIS reads."
+      ]
+    ],
+    "body": [
+      {
+        "h2": "The exact message",
+        "p": [
+          "Windows File Explorer shows `Windows cannot open the folder.` followed by `The Compressed (zipped) Folder “C:\\…\\name.zip” is invalid.` You get it when you rename a `.lpk`, `.lpkx`, `.mpk` or `.mpkx` to `.zip` and double-click it."
+        ],
+        "list": []
+      },
+      {
+        "h2": "Why renaming to .zip doesn’t work",
+        "p": [
+          "A zip file starts with the bytes `PK`; the layer and map packages we have tested start with `7z`, the signature of a 7-Zip archive. A post on the Esri Community Python blog reached the same conclusion for an ArcGIS Pro `.lpkx`, and a commenter notes that Esri uses zip for some other package types. Explorer’s “Compressed (zipped) Folder” feature only understands zip, so it calls the file invalid even though nothing is wrong with it. The same message can also appear for a real zip whose paths are too long for Windows; 7-Zip handles that case too."
+        ],
+        "list": []
+      },
+      {
+        "h2": "What GeoUnpack can and cannot fix",
+        "p": [
+          "GeoUnpack reads the 7-Zip archive directly, finds the file geodatabase or shapefiles and exports them. It cannot rebuild a file that was cut off during download, and it won’t find vector layers in packages that contain only rasters or tiles, or that only reference data stored on a server."
+        ],
+        "list": []
       }
     ],
     "updated": "2026-11-21"
