@@ -76,6 +76,7 @@ _最后更新 2026-11-03_
 - [x] 加对比表格（本工具 / MyGeodata / QGIS 手动办法），AI 摘要很喜欢引用表格。（mygeodata-alternative、open-lpk-in-qgis 两页）
 - [x] “关于”页写清作者、原理、限制、联系邮箱 hello@geounpack.com（**需要在 Cloudflare Email Routing 设置转发**）；所有页面带 og 分享预览。
 - [ ] 站点地图、页面加载速度、移动端适配。
+- [x] 2026-11-21 匿名使用统计：前端 `track()` 用 sendBeacon 发到 `/api/e`（`functions/api/e.js`，Cloudflare Pages Function），按“日期 + 网站 + 页面 + 事件 + 简短类别”累加到 D1 数据库 `site-events` 的 `counts` 表（两个网站共用，生产环境绑定名 `DB`）。只接受白名单事件，不存文件名、图层名、IP 或 Cookie；隐私页已写明。新增事件要同时改 `functions/api/e.js` 的白名单（两个仓库各一份）。
 - [x] 2026-11-21 根据 Search Console 第一周数据：新增 KMZ 导出（浏览器里把 KML 压成 doc.kml）；新增 gdb-to-kmz、mpkx-viewer、lpkx-viewer 三页（“mpkx”“lpkx file”“gdb to kmz”有展示但没有对应页面）；改写 open-lpk-in-qgis、open-lpk-without-arcgis、mpk-viewer、lpk-viewer 的标题和描述（展示多、点击少）。改过的页面在 pages.json 里带 `updated` 字段。4 周后对比这几页的点击率。
 - [x] 2026-11-13 审查后的改动：`404.html`（避免软 404）；每个落地页在 `src/pages.json` 的 `body` 字段里有 110–210 词的独有内容（新增页面时必须写 `body`，不能只写导语）；`layer-package-to-shapefile` 并入 `lpk-to-shapefile`（`public/_redirects` 做 301）；分享预览图 `public/og.png`；标题超过 60 字符时自动去掉品牌后缀；sitemap 的 lastmod 用内容更新日期（`scripts/build.mjs` 里的 `CONTENT_UPDATED`，或每页的 `updated` 字段），**改了页面内容要手动更新这个日期**。
 - [x] 2026-11-13 修复：引擎崩溃后按钮恢复可用；同一个文件可以重新选择；同名图层导出不再互相覆盖；导出文件名保留中文等非英文字符；隐私页写明 jsDelivr；工具下方加了“文件打不开？告诉我们”的邮件链接。

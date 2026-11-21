@@ -13,6 +13,10 @@
     window.GEOUNPACK_CONFIG || {}
   );
 
+  // Anonymous usage count (see functions/api/e.js): event name and a short category only.
+  const track = (e, d) => { try { navigator.sendBeacon('/api/e', JSON.stringify({ e, d: d || '', p: location.pathname })); } catch (_) { /* ignore */ } };
+  const errKind = (m) => (/memory/i.test(m) ? 'memory' : /unpacked|damaged/i.test(m) ? 'unpack' : /No geodatabase|raster/i.test(m) ? 'no_vector' : /engine/i.test(m) ? 'engine' : 'other');
+  const sizeBucket = (mb) => (mb < 1 ? 'lt1mb' : mb < 10 ? '1-10mb' : mb < 50 ? '10-50mb' : '50-150mb');
   const $ = (sel) => document.querySelector(sel);
   const drop = $('#drop');
   const input = $('#file');
@@ -52,6 +56,7 @@
         : 'The converter stopped unexpectedly, most likely because the browser ran out of memory. Please open the file again and export one layer at a time.';
       try { worker.terminate(); } catch (_) { /* ignore */ }
       worker = null;
+      track(/downloaded/.test(msg) ? 'engine_fail' : 'crash', errKind(e.message || ''));
       const waiting = [...pending.values()];
       pending.clear();
       if (waiting.length) waiting.forEach((p) => p.reject(new Error(msg)));
@@ -157,6 +162,7 @@
       const note = l.featureCount > 2000 ? ' (first 2,000 features shown)' : '';
       setStatus(`Showing ${l.name} on the map${note}. Click a feature to see its attributes.`, 'ok');
     } catch (err) {
+      track('preview_fail', errKind(err.message));
       setStatus(err.message, 'error');
     }
   }
@@ -186,6 +192,7 @@
     if (!file) return;
     const mb = file.size / 1e6;
     if (mb > CFG.maxFileMB) {
+      track('open_fail', 'too_big');
       setStatus(`This file is ${mb.toFixed(0)} MB. The current limit is ${CFG.maxFileMB} MB so your browser does not run out of memory.`, 'error');
       return;
     }
@@ -197,6 +204,7 @@
     setStatus(`Opening ${file.name}…`, 'busy');
     try {
       layers = await call('open', { file });
+      track('open_ok', `${(file.name.match(/\.(lpkx?|mpkx?|zip|7z)$/i) || [, 'other'])[1].toLowerCase()}:${sizeBucket(mb)}`);
       renderLayers();
       panel.hidden = false;
       const geomCount = layers.filter((l) => l.geometryType).length;
@@ -204,6 +212,7 @@
       const first = layers[firstGeomIndex()];
       if (first) showPreview(first);
     } catch (err) {
+      track('open_fail', errKind(err.message));
       setStatus(err.message, 'error');
     }
   }
@@ -249,8 +258,10 @@
       if (format === 'kmz') msg += ' Open the .kmz in Google Earth, or import it into Google My Maps (My Maps accepts up to about 2,000 features per layer).';
       if (format === 'shp') msg += ' Note: Shapefile field names are limited to 10 characters and very large numbers can be truncated; use GeoPackage or GeoJSON if exact values matter.';
       if (!isUnlocked && sel.some((l) => l.featureCount > CFG.freeFeatureLimit)) msg += ` The free version exported the first ${CFG.freeFeatureLimit.toLocaleString()} features.`;
+      track('export_ok', `${format}:${sel.length > 1 ? 'multi' : 'single'}`);
       setStatus(msg, 'ok');
     } catch (err) {
+      track('export_fail', errKind(err.message));
       setStatus(err.message, 'error');
     } finally {
       exportBtn.disabled = false;
