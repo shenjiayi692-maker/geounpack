@@ -32,7 +32,7 @@ const server = http.createServer((req, res) => {
     const n = await page.$$eval('#layers input', (els) => els.length);
     console.log(`\n## ${f}: ${n} layers in ${Date.now() - t}ms — ${status.slice(0, 90)}`);
     if (!n) { failures++; await ctx.close(); continue; }
-    for (const fmt of ['shp', 'gpkg', 'geojson', 'kml', 'csv']) {
+    for (const fmt of ['shp', 'gpkg', 'geojson', 'kml', 'kmz', 'csv']) {
       await page.selectOption('#format', fmt);
       const t2 = Date.now();
       try {

@@ -202,9 +202,9 @@
   },
   {
     "slug": "lpk-viewer",
-    "title": "LPK Viewer: Open .lpk Files Online Without ArcGIS | GeoUnpack",
+    "title": "LPK Viewer: Open .lpk Files Online, Free, No ArcGIS | GeoUnpack",
     "h1": "LPK Viewer",
-    "description": "View the contents of an ArcGIS .lpk or .lpkx layer package online: layers, feature counts, attributes and a map preview. No install, no upload.",
+    "description": "What's inside that .lpk file? Open an ArcGIS layer package in your browser: layer names, attributes, coordinate system and a map preview. Free, nothing uploaded.",
     "lead": "Find out what's inside an .lpk file in seconds: layer names, feature counts, coordinate system, attributes and a map preview. No ArcGIS licence required.",
     "defaultFormat": "geojson",
     "steps": [
@@ -243,13 +243,14 @@
           "You see the data, not the cartography. The colours, classifications and labels the author set up are stored in the `.lyr` file inside the package, in a format only ArcGIS draws. Raster layers (imagery, elevation) are not shown. If no layers are found, the package probably references data on a server rather than containing a copy; ask the sender to re-create it with the data included."
         ]
       }
-    ]
+    ],
+    "updated": "2026-11-21"
   },
   {
     "slug": "open-lpk-without-arcgis",
-    "title": "How to Open an LPK File Without ArcGIS (3 Ways) | GeoUnpack",
+    "title": "How to Open an LPK File Without ArcGIS: 3 Free Ways | GeoUnpack",
     "h1": "Open an LPK File Without ArcGIS",
-    "description": "Three ways to open an ArcGIS .lpk layer package without ArcGIS: an online converter, 7-Zip + QGIS, or GDAL's ogr2ogr. Step-by-step.",
+    "description": "No ArcGIS licence? Open an .lpk layer package for free: convert it online in your browser, unpack it with 7-Zip and use QGIS, or run GDAL. Works on Windows and Mac.",
     "lead": "You don't need an ArcGIS licence to get the data out of an .lpk. Use the tool below, or follow one of the free manual methods further down.",
     "defaultFormat": "shp",
     "steps": [
@@ -294,13 +295,14 @@
           "You can upload a layer package to ArcGIS Online as an item, but that only stores it so others can download it into ArcGIS desktop software; it is not drawn on a web map. In practice the three methods above are the ones that work without a licence."
         ]
       }
-    ]
+    ],
+    "updated": "2026-11-21"
   },
   {
     "slug": "open-lpk-in-qgis",
-    "title": "How to Open an LPK File in QGIS (or Skip QGIS Entirely) | GeoUnpack",
+    "title": "Open an LPK File in QGIS: 2 Free Ways (Step by Step) | GeoUnpack",
     "h1": "Open an LPK File in QGIS",
-    "description": "QGIS can't open an ArcGIS .lpk directly. Extract it with 7-Zip and load the .gdb, or convert it to GeoPackage in your browser first. Step-by-step, nothing uploaded.",
+    "description": "QGIS can't open .lpk files directly. Convert the layer package to GeoPackage in your browser in one step, or unpack it with 7-Zip and load the .gdb. Both methods explained.",
     "lead": "QGIS doesn't recognise .lpk or .mpk files, but the data inside is a normal file geodatabase. Convert it to GeoPackage with the tool above and drag the result into QGIS, or unpack it by hand with the steps below.",
     "defaultFormat": "gpkg",
     "steps": [
@@ -385,7 +387,8 @@
           "The `.lyr` file does nothing in QGIS: it is Esri's symbology format. You will need to style the layer again."
         ]
       }
-    ]
+    ],
+    "updated": "2026-11-21"
   },
   {
     "slug": "lpkx-to-shapefile",
@@ -432,9 +435,9 @@
   },
   {
     "slug": "mpk-viewer",
-    "title": "MPK Viewer: Open ArcGIS Map Packages (.mpk, .mpkx) Online | GeoUnpack",
+    "title": "MPK Viewer: Open .mpk Map Packages Online, Free | GeoUnpack",
     "h1": "MPK Viewer",
-    "description": "Open .mpk and .mpkx map packages online without ArcGIS. See every layer, feature counts, attributes and a map preview. Free, private, no upload.",
+    "description": "Open an ArcGIS .mpk map package in your browser without ArcGIS. See every layer and table, feature counts and a map preview, then export to Shapefile, KML or CSV.",
     "lead": "A map package bundles a whole map. Several layers and their data. GeoUnpack lists all the layers inside and lets you preview and export them.",
     "defaultFormat": "gpkg",
     "steps": [
@@ -452,7 +455,7 @@
         "No. GeoUnpack extracts the data layers. Map layouts, symbols and labels require ArcGIS."
       ]
     ],
-    "subtitle": "Open ArcGIS map packages (.mpk, .mpkx) and browse every layer they contain.",
+    "subtitle": "Open ArcGIS map packages (.mpk) and browse every layer they contain. For ArcGIS Pro .mpkx files, see the MPKX viewer.",
     "from": "MPK",
     "body": [
       {
@@ -471,7 +474,8 @@
           "Basemaps are not in the package at all. They are online services the map pointed to."
         ]
       }
-    ]
+    ],
+    "updated": "2026-11-21"
   },
   {
     "slug": "mpk-to-shapefile",
@@ -583,7 +587,7 @@
     "faq": [
       [
         "Can I make a KMZ?",
-        "Export to KML, then compress the .kml file to a .zip and rename it to .kmz. Google Earth opens both."
+        "Yes. Choose KMZ in the output list, or use the GDB to KMZ converter. A KMZ is the same KML compressed into a smaller file."
       ]
     ],
     "subtitle": "Convert file geodatabase feature classes to KML for Google Earth.",
@@ -602,11 +606,12 @@
           "Export one feature class per KML file; it keeps Google Earth's Places panel readable.",
           "Attributes appear in each feature's balloon. Coded-value domains show as codes, not descriptions.",
           "For Google My Maps, stay under about 2,000 features and 5 MB per file.",
-          "Need a `.kmz`? It is simply a zipped KML: zip the file and rename the extension to `.kmz`.",
+          "Need a smaller file? Choose KMZ in the output list: it is the same KML, compressed.",
           "If a feature class has no coordinate system defined, reprojection is not possible; export it as Shapefile and assign the system in a GIS first."
         ]
       }
-    ]
+    ],
+    "updated": "2026-11-21"
   },
   {
     "slug": "gdb-to-geojson",
@@ -756,6 +761,150 @@
         "h2": "Where GeoUnpack is narrower",
         "p": [
           "GeoUnpack does one job: getting vector data out of `.lpk`, `.lpkx`, `.mpk`, `.mpkx` and zipped `.gdb` files. General cloud converters cover far more formats, handle rasters, offer coordinate-system options and can process files larger than a browser's memory allows. If you need those, a cloud converter or desktop QGIS is the right tool."
+        ]
+      }
+    ]
+  },
+  {
+    "slug": "gdb-to-kmz",
+    "title": "GDB to KMZ Converter: File Geodatabase to Google Earth | GeoUnpack",
+    "h1": "GDB to KMZ Converter",
+    "from": "GDB",
+    "defaultFormat": "kmz",
+    "updated": "2026-11-21",
+    "description": "Convert Esri file geodatabase feature classes to KMZ for Google Earth and Google My Maps. Runs in your browser, nothing uploaded, no ArcGIS needed.",
+    "subtitle": "Convert file geodatabase feature classes to compressed KMZ for Google Earth and My Maps.",
+    "lead": "Zip your .gdb folder, drop it below and export any feature class as a .kmz: reprojected to WGS84 and compressed, ready for Google Earth or Google My Maps.",
+    "steps": [
+      "Compress the .gdb folder to a .zip.",
+      "Drop the .zip into the box.",
+      "Tick the feature classes you want, keep 'KMZ' selected and click Convert & download."
+    ],
+    "faq": [
+      [
+        "What is the difference between KML and KMZ?",
+        "A KMZ is a zip file containing a KML named doc.kml. The content is identical; the KMZ is several times smaller, which matters for e-mail attachments and for Google My Maps' 5 MB import limit."
+      ],
+      [
+        "Are symbology and labels kept?",
+        "No. GeoUnpack exports the geometry and attributes. Colours and labels from ArcGIS are not carried over; Google Earth applies its default style."
+      ]
+    ],
+    "body": [
+      {
+        "h2": "Why KMZ instead of KML",
+        "p": [
+          "KML is verbose XML text, so a detailed polygon layer quickly reaches tens of megabytes. Compressed as KMZ, the same data is typically 5 to 10 times smaller. Google Earth Pro, Google Earth on the web and Google My Maps all open KMZ directly, and it is the format most people mean when they ask for a 'Google Earth file'."
+        ]
+      },
+      {
+        "h2": "What happens during the conversion",
+        "p": [],
+        "list": [
+          "Each feature class is reprojected from its stored coordinate system to WGS84 latitude and longitude, which KML requires.",
+          "All attribute fields are written into the feature's pop-up balloon. Coded-value domains appear as their stored codes.",
+          "Several feature classes are delivered as one .zip containing one .kmz per feature class.",
+          "Feature classes without a defined coordinate system cannot be reprojected; assign one in a GIS first."
+        ]
+      },
+      {
+        "h2": "Importing into Google My Maps",
+        "p": [
+          "My Maps accepts at most about 2,000 features per layer and 5 MB per file. For bigger feature classes use Google Earth Pro on a computer, which handles hundreds of thousands of features, or split the data first."
+        ]
+      }
+    ]
+  },
+  {
+    "slug": "mpkx-viewer",
+    "title": "MPKX Viewer: Open .mpkx Files Online Without ArcGIS Pro | GeoUnpack",
+    "h1": "MPKX File Viewer",
+    "from": "MPKX",
+    "defaultFormat": "gpkg",
+    "updated": "2026-11-21",
+    "description": "Open an ArcGIS Pro .mpkx map package in your browser without ArcGIS Pro. List every layer and table, preview it on a map, export to Shapefile, GeoPackage, KML or CSV.",
+    "subtitle": "Open ArcGIS Pro map packages (.mpkx), browse every layer and export the data. No ArcGIS Pro needed.",
+    "lead": "An .mpkx file is a map package created by ArcGIS Pro. It bundles a map and a copy of every layer's data. Drop it below to see the layers inside and export them to formats any GIS can read.",
+    "steps": [
+      "Drop the .mpkx file into the box.",
+      "Click Preview on any layer to see it on the map.",
+      "Tick the layers you need, pick a format and click Convert & download."
+    ],
+    "faq": [
+      [
+        "What is an .mpkx file?",
+        "A map package from ArcGIS Pro: a 7-Zip archive containing the map definition (.mapx) and the data of every layer, usually in file geodatabases. It replaced ArcMap's .mpk format."
+      ],
+      [
+        "How do I open an .mpkx file in ArcGIS Pro?",
+        "Double-click it, or drag it into a Pro project; Pro unpacks it into your Documents\\ArcGIS\\Packages folder. Without ArcGIS Pro, use this viewer to get the data out."
+      ],
+      [
+        "Can I open an .mpkx in ArcMap or QGIS?",
+        "Neither opens it directly. ArcMap cannot read Pro packages at all. For QGIS, export the layers to GeoPackage here, or unpack the .mpkx with 7-Zip and load the .gdb folder inside."
+      ]
+    ],
+    "body": [
+      {
+        "h2": "What is inside an .mpkx",
+        "p": [
+          "Unpacked, an `.mpkx` holds a `.mapx` file (the map, in JSON), an `esriinfo` folder with metadata, and the data in folders named after the ArcGIS Pro version, such as `p20` or `p30`, plus `commondata`. The data is almost always one or more file geodatabases. GeoUnpack reads them all, keeps only the newest copy when data is duplicated, and lists one row per layer or table."
+        ]
+      },
+      {
+        "h2": "MPKX vs MPK",
+        "p": [
+          "`.mpk` is the older ArcMap map package; `.mpkx` is the ArcGIS Pro version. ArcGIS Pro opens both, ArcMap only `.mpk`. For getting the data out they behave the same, and GeoUnpack opens either. The map layout, symbology and labels are stored in the `.mapx` and are not converted; you get the geometry and attributes."
+        ]
+      },
+      {
+        "h2": "If no layers appear",
+        "p": [
+          "Some `.mpkx` files reference data on a server or an enterprise geodatabase instead of containing a copy, and some contain only rasters or web layers. GeoUnpack will tell you when it finds no vector data. Ask the sender to re-create the package with the option to include the data."
+        ]
+      }
+    ]
+  },
+  {
+    "slug": "lpkx-viewer",
+    "title": "LPKX File Viewer: Open .lpkx Files Online, No ArcGIS Pro | GeoUnpack",
+    "h1": "LPKX File Viewer",
+    "from": "LPKX",
+    "defaultFormat": "gpkg",
+    "updated": "2026-11-21",
+    "description": "Open an ArcGIS Pro .lpkx layer package in your browser: see the layers, attributes and coordinate system on a map, then export to Shapefile, GeoPackage, KML or CSV.",
+    "subtitle": "See what's inside an ArcGIS Pro layer package (.lpkx) and export the data. No ArcGIS Pro needed.",
+    "lead": "An .lpkx file is a layer package from ArcGIS Pro: one or more layers plus a copy of their data. Drop it below to see the layers, preview them on a map and export them to a format you can use.",
+    "steps": [
+      "Drop the .lpkx file into the box.",
+      "Check the layer list and click Preview to see it on the map.",
+      "Pick an output format and click Convert & download."
+    ],
+    "faq": [
+      [
+        "What is an .lpkx file?",
+        "A layer package created by ArcGIS Pro. It is a 7-Zip archive containing a .lyrx layer definition (symbology, in JSON) and the layer's data, usually as a file geodatabase."
+      ],
+      [
+        "What opens .lpkx files?",
+        "ArcGIS Pro opens them directly. ArcMap cannot. QGIS cannot open the package itself, but it can read the file geodatabase inside once the package is unpacked, or a GeoPackage exported here."
+      ]
+    ],
+    "body": [
+      {
+        "h2": "What is inside an .lpkx",
+        "p": [
+          "The archive contains a `.lyrx` file with the layer's styling, an `esriinfo` folder with metadata and a thumbnail, and the data in version folders such as `p20` or `p30`. GeoUnpack unpacks it in your browser, reads the geodatabase with GDAL and shows each layer's geometry type, feature count and coordinate system."
+        ]
+      },
+      {
+        "h2": "What you can do with it here",
+        "p": [],
+        "list": [
+          "Preview up to 2,000 features of any layer on a map and click them to read attributes.",
+          "Export to GeoPackage for QGIS (keeps long field names and Z values).",
+          "Export to Shapefile for older software, KML or KMZ for Google Earth, GeoJSON for web maps, or CSV for Excel.",
+          "Elevation, imagery and other raster layers inside an .lpkx are not supported yet."
         ]
       }
     ]

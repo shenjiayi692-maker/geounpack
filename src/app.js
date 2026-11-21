@@ -221,9 +221,14 @@
       const zipEntries = {};
       const usedFolders = new Set();
       for (const l of sel) {
-        const fmt = !l.geometryType ? 'csv' : format;
+        const fmt = !l.geometryType ? 'csv' : format === 'kmz' ? 'kml' : format;
         const limit = !isUnlocked && l.featureCount > CFG.freeFeatureLimit ? CFG.freeFeatureLimit : undefined;
         const r = await call('export', { source: l.source, layer: l.name, format: fmt, limit, hasGeometry: !!l.geometryType });
+        if (fmt === 'kml' && format === 'kmz') {
+          // KMZ is a zip holding one KML named doc.kml; Google Earth and My Maps open it directly
+          r.files = [{ name: `${r.layer}.kmz`, bytes: fflate.zipSync({ 'doc.kml': new Uint8Array(r.files[0].bytes) }, { level: 6 }) }];
+          r.ext = 'kmz';
+        }
         const nice = niceName(l.name);
         if (r.files.length === 1 && sel.length === 1) {
           const f = r.files[0];
@@ -241,6 +246,7 @@
         download(sel.length === 1 ? `${niceName(sel[0].name)}_${format}.zip` : `geounpack_export_${format}.zip`, zipped, 'application/zip');
       }
       let msg = 'Done. Check your downloads folder.';
+      if (format === 'kmz') msg += ' Open the .kmz in Google Earth, or import it into Google My Maps (My Maps accepts up to about 2,000 features per layer).';
       if (format === 'shp') msg += ' Note: Shapefile field names are limited to 10 characters and very large numbers can be truncated; use GeoPackage or GeoJSON if exact values matter.';
       if (!isUnlocked && sel.some((l) => l.featureCount > CFG.freeFeatureLimit)) msg += ` The free version exported the first ${CFG.freeFeatureLimit.toLocaleString()} features.`;
       setStatus(msg, 'ok');
