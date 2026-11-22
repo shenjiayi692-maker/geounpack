@@ -16,6 +16,21 @@
   // Anonymous usage count (see functions/api/e.js): event name and a short category only.
   const track = (e, d) => { try { navigator.sendBeacon('/api/e', JSON.stringify({ e, d: d || '', p: location.pathname })); } catch (_) { /* ignore */ } };
   const errKind = (m) => (/memory/i.test(m) ? 'memory' : /unpacked|damaged/i.test(m) ? 'unpack' : /No geodatabase|raster/i.test(m) ? 'no_vector' : /engine/i.test(m) ? 'engine' : 'other');
+  // For diagnosing failed opens without knowing the file: its extension and what its first bytes say it really is.
+  const extOf = (name) => { const m = /\.([a-z0-9]{1,6})$/i.exec(name); return m ? m[1].toLowerCase() : 'none'; };
+  async function signature(file) {
+    try {
+      const b = new Uint8Array(await file.slice(0, 8).arrayBuffer());
+      const s = (sig) => sig.every((v, i) => b[i] === v);
+      if (s([0x37, 0x7a, 0xbc, 0xaf])) return '7z';
+      if (s([0x50, 0x4b])) return 'zip';
+      if (s([0x52, 0x61, 0x72, 0x21])) return 'rar';
+      if (s([0x1f, 0x8b])) return 'gzip';
+      if (s([0x25, 0x50, 0x44, 0x46])) return 'pdf';
+      if (s([0x3c])) return 'xml';
+      return b.length ? 'other' : 'empty';
+    } catch (_) { return 'unread'; }
+  }
   const sizeBucket = (mb) => (mb < 1 ? 'lt1mb' : mb < 10 ? '1-10mb' : mb < 50 ? '10-50mb' : '50-150mb');
   const $ = (sel) => document.querySelector(sel);
   const drop = $('#drop');
@@ -212,8 +227,10 @@
       const first = layers[firstGeomIndex()];
       if (first) showPreview(first);
     } catch (err) {
-      track('open_fail', errKind(err.message));
-      setStatus(err.message, 'error');
+      const kind = errKind(err.message);
+      track('open_fail', `${kind}:${extOf(file.name)}:${await signature(file)}:${sizeBucket(mb)}`);
+      const ask = kind === 'memory' ? '' : ' If you can share this file, email it to hello@geounpack.com and we will look into why it does not open.';
+      setStatus(err.message + ask, 'error');
     }
   }
 
