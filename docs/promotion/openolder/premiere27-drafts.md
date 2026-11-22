@@ -4,7 +4,7 @@
 
 这份文件有两部分：
 
-1. **给 prem-down 作者的 GitHub issue**：告诉他 Premiere 27 的版本号是 46、文件结构和 2026 一样，我们已经实测通过。OpenOlder 的转换逻辑来自他的开源项目，这样做既是回馈，也可能让他在项目说明里提到 OpenOlder。用你自己的 GitHub 账号发。
+1. **给 prem-down 作者的 GitHub issue（已过时，作者已自行支持 27，不要发）**：告诉他 Premiere 27 的版本号是 46、文件结构和 2026 一样，我们已经实测通过。OpenOlder 的转换逻辑来自他的开源项目，这样做既是回馈，也可能让他在项目说明里提到 OpenOlder。用你自己的 GitHub 账号发。
 2. **YouTube 视频脚本**：“在 Premiere 2026 中打开 Premiere 27 的项目”，约 55 秒，只需录屏和配音，不用露脸。
 
 注意：
@@ -13,7 +13,9 @@
 
 ---
 
-## 1. GitHub issue for prem-down
+## 1. GitHub issue for prem-down（已过时，不要发）
+
+> **2026-11-22：不需要再发。** 作者已于 2026-11-21 自己加入了 Premiere 27 支持（`{46, "2027", nil}`，并附带真实的 27 测试项目），本节草稿的核心内容他都做完了。以后遇到真正的转换失败或 bug，再附上测试文件去提 issue。我们的测试已经用上他新加的真实 27 项目。
 
 Repository: https://github.com/lucuma13/prem-down
 
