@@ -1,3 +1,5 @@
+> **2026-11-22 更新 / Update：** Premiere 27 支持已上线并经真机验证（27 → 2026 能正常打开）。下文里“不要宣传支持 27”的提醒已失效：现在可以在回复中说支持 27，链接 https://openolder.com/premiere-27-to-2026/ 。Premiere 27 support is live and verified in real Premiere (27 → 2026); the "never claim 27 support" warnings below no longer apply.
+
 # OpenOlder: three YouTube screen-recording scripts
 
 ## 给 Jiayi 的中文说明

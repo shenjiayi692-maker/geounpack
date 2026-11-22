@@ -1,5 +1,7 @@
 # OpenOlder: forum answers (real threads + drafted replies)
 
+> **2026-11-22 更新 / Update：** Premiere 27 支持已上线并经真机验证（27 → 2026 能正常打开）。下文里“不要宣传支持 27”的提醒已失效：现在可以在回复中说支持 27，链接 https://openolder.com/premiere-27-to-2026/ 。Premiere 27 support is live and verified in real Premiere (27 → 2026); the "never claim 27 support" warnings below no longer apply.
+
 ## 给 Jiayi 的中文说明
 
 **这是什么：** 我在网上找到的真实论坛帖子（都是我亲自打开读过的，或在搜索结果里看到的，每条都注明了），里面有人遇到"新版 Premiere 的项目在旧版打不开"。每条都写了：链接、日期、一句话总结、这个论坛允不允许放链接、以及一段可以直接贴的英文回复（先讲官方 XML 办法，再介绍你的工具，最后讲限制，并且写明 "I built this"）。
