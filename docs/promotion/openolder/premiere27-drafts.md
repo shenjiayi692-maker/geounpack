@@ -101,3 +101,28 @@ premiere pro, premiere 27, premiere pro 2026, open newer premiere project, saved
 - 先录 2026 打开 27 项目时的报错，再录网站操作，最后录 2026 成功打开的画面。三段分开录也可以，用剪映或 Premiere 拼起来。
 - 字幕用英文。配音不想自己说，可以只加字幕和背景音乐。
 - 上传后在视频描述里放链接；Shorts 的链接放在置顶评论里。
+
+---
+
+## 3. Adobe Community: replies for Premiere 27 threads
+
+### 中文说明
+
+Premiere 27 刚发布，Adobe 社区会不断出现“27 的项目在 2026 打不开”的新帖。这些帖子还没被我们收进 `forum-answers.md`，需要用 Chrome 插件现找。下面是一份通用回复模板，**每次都要按帖子内容改第一句**，不要整段复制到多个帖子：论坛会把一模一样的内容当成垃圾广告。
+
+回帖前先看：
+- 帖子里 Adobe 员工是否已经给了官方办法（比如 Adobe 自己的降级工具）。如果有，不要放链接。
+- 帖子是否已锁定或已解决。
+- 每天最多回 1–2 个帖子，签名档里不要放网址。
+
+### Template
+
+```
+[One sentence that answers their exact situation, e.g. "Since your client is on 2026 and can't update yet, …"]
+
+Premiere 2026 refuses the file because Premiere 27 writes a newer project version number. Premiere 27 keeps the same file layout as 2026, so the project only needs its version lowered, which Premiere itself can't do (there's no Save As Older Version).
+
+I built a free tool that does this in the browser (disclosure: it's mine): https://openolder.com/premiere-27-to-2026/ . The project isn't uploaded anywhere, and it writes a new copy so your original stays as it was. I tested a project saved in 27 and converted this way: it opened in 2026 with its clips, transitions and titles. It can also go further back to 2025 or older, and it handles several projects at once or a whole Production.
+
+Things that only exist in 27 won't appear in 2026, and media isn't converted, so relink if asked. Keep the original and check the timeline before you rely on it. The official alternative is File > Export > Final Cut Pro XML from 27 and importing that in 2026, which works for simple cuts but loses many effects.
+```

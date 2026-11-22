@@ -58,7 +58,9 @@ Legend: **Fetched** = I opened and read the page. **Search only** = seen in sear
 >
 > **Converting the project itself:** I built a free browser tool for this, OpenOlder: https://openolder.com/premiere-2026-to-2025/ . It adds the missing fields back, then sets the version, and writes a new copy (your original is not touched). If you got the "may be damaged" message after a hand edit, this page explains it: https://openolder.com/project-could-not-be-loaded-damaged/ It runs in your browser, so the project is not uploaded anywhere, and it also handles batches and whole Productions. The conversion logic is a JavaScript port of the open-source prem-down tool. I've tested 2026 to 2025 in real Premiere on my own projects.
 >
-> Caveats: features that only exist in 2026 (Object Mask, the new type tools) won't appear in 2025. It doesn't touch your media, so relink if needed. It does not support Premiere 27.0 projects yet. Always keep the original and check the converted timeline before you rely on it. If it fails on one of your projects I'd like to hear about it.
+> It also handles the newest case, Premiere 27 projects that 2026 can't open: https://openolder.com/premiere-27-to-2026/ (tested 27 to 2026 in real Premiere).
+>
+> Caveats: features that only exist in 2026 (Object Mask, the new type tools) won't appear in 2025. It doesn't touch your media, so relink if needed. Always keep the original and check the converted timeline before you rely on it. If it fails on one of your projects I'd like to hear about it.
 
 #### #2 Adobe Community: "Downgrading PR 2026 Projects to Earlier Version"
 - URL: https://community.adobe.com/feature-requests-730/downgrading-pr-2026-projects-to-earlier-version-1548595 . **Fetched.**
@@ -71,9 +73,9 @@ Legend: **Fetched** = I opened and read the page. **Search only** = seen in sear
 >
 > The reason the old version-number edit fails on 2026 projects is that 2026 omits some fields that 2025 and older require (lower/upper bounds on video effect parameters, among others). Putting those back before lowering the version makes the project load again.
 >
-> I built a free tool that does exactly that, in the browser: https://openolder.com/premiere-2026-to-2025/ (disclosure: it's mine). Nothing is uploaded, there is no account or payment, and it writes a new copy so the original 2026 project stays as it was. It works on single projects, several at once, and Productions. I've checked 2026 to 2025 in real Premiere.
+> I built a free tool that does exactly that, in the browser: https://openolder.com/premiere-2026-to-2025/ (disclosure: it's mine). Nothing is uploaded, there is no account or payment, and it writes a new copy so the original 2026 project stays as it was. It works on single projects, several at once, and Productions. I've checked 2026 to 2025 in real Premiere. It also converts Premiere 27 projects for 2026 (https://openolder.com/premiere-27-to-2026/), tested in real Premiere as well.
 >
-> Limits, so nobody is surprised: Object Mask and other 2026-only features won't come across; media isn't converted, so relink if asked; Premiere 27.0 projects aren't supported yet. Stan's XML-into-24.6.5 route above is still a good fallback, and I'd keep the original file whatever you try.
+> Limits, so nobody is surprised: Object Mask and other 2026-only features won't come across; media isn't converted, so relink if asked. Stan's XML-into-24.6.5 route above is still a good fallback, and I'd keep the original file whatever you try.
 
 #### #3 Creative COW: "backwards compatible"
 - URL: https://creativecow.net/forums/thread/backwards-compatible-2/ . **Fetched.**
@@ -92,14 +94,14 @@ Legend: **Fetched** = I opened and read the page. **Search only** = seen in sear
 - URL: https://community.adobe.com/questions-734/has-version-2026-killed-the-ability-to-downgrade-a-project-to-a-previous-version-1612945 . **Fetched.**
 - Dates: posted 2026-01-26; latest reply 2026-11-02. Locked/answered status not shown.
 - Summary: rename-and-edit and an online converter both failed for 2026 to 2025. Adobe Community Manager: the v26 structure changed (Object Mask), backward compatibility "being considered". Recent replies (Nov 2026) are about **27 beta to 26**, which OpenOlder doesn't support yet.
-- Linking: OK for the 2026 to 2025 part. **Recommended: wait** until 27 to 26 is supported and tested, then reply covering both. If you reply now, use the draft and be explicit about 27.
-- Draft reply (2026 to 2025 only):
+- Linking: OK. **2026-11-22: 27 to 26 is now supported and tested, so reply now (high priority: recent posts ask exactly this).**
+- Draft reply (covers both 2026 to 2025 and 27 to 2026):
 
 > On the original question (2026 project into 2025): the edit fails because 2026 leaves out some fields that 2025 still requires, so changing the version number alone gives a "damaged" project. If those fields are restored first, 2025 opens it.
 >
 > I built a free browser tool that does that (disclosure: my project): https://openolder.com/premiere-2026-to-2025/ . It doesn't upload the file, writes a new copy, and works with Productions. Tested 2026 to 2025 in Premiere. 2026-only features like Object Mask won't come across.
 >
-> For the newer posts about 27 (beta) to 26: my tool doesn't handle 27 projects yet, so for that case Adobe's suggestions here still apply.
+> For the newer posts here about 27 projects that won't open in 26: the same tool now handles that too: https://openolder.com/premiere-27-to-2026/ . Premiere 27 keeps the 2026 file layout, so only the version needs changing; I tested a 27 project converted this way and it opened in 2026 with its clips, transitions and titles. I tested with the 27.0 release, so if your file comes from a beta build, keep the original and check the result.
 
 #### #5 Adobe Community (Premiere Beta bug reports): "Is there any way to downgrade a project from the current beta???"
 - URL: https://community.adobe.com/bug-reports-733/is-there-any-way-to-downgrade-a-project-from-the-current-beta-1616870 . **Fetched.**
