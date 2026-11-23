@@ -31,6 +31,16 @@
       return b.length ? 'other' : 'empty';
     } catch (_) { return 'unread'; }
   }
+  // Export failures: a coarse category only (GDAL messages can contain layer names, which we never record).
+  const exportErrKind = (m) => (/memory|Aborted\(|out of bounds/i.test(m) ? 'memory'
+    : /transform|coordinate system|srs|projection|proj/i.test(m) ? 'crs'
+      : /source not found/i.test(m) ? 'nosource'
+        : /geometry|geom|nlt|polygon|curve|surface|tin\b/i.test(m) ? 'geometry'
+          : /field|column|attribute/i.test(m) ? 'field'
+            : /exist/i.test(m) ? 'exists'
+              : /not defined|undefined|null|is not a function|typeerror/i.test(m) ? 'js'
+                : /damaged|reading this file/i.test(m) ? 'read' : 'other');
+  const geomKey = (g) => (g ? String(g).toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 18) : 'table');
   const sizeBucket = (mb) => (mb < 1 ? 'lt1mb' : mb < 10 ? '1-10mb' : mb < 50 ? '10-50mb' : '50-150mb');
   const $ = (sel) => document.querySelector(sel);
   const drop = $('#drop');
@@ -177,7 +187,7 @@
       const note = l.featureCount > 2000 ? ' (first 2,000 features shown)' : '';
       setStatus(`Showing ${l.name} on the map${note}. Click a feature to see its attributes.`, 'ok');
     } catch (err) {
-      track('preview_fail', errKind(err.message));
+      track('preview_fail', `${exportErrKind(err.message)}:${geomKey(l.geometryType)}`);
       setStatus(err.message, 'error');
     }
   }
@@ -246,19 +256,29 @@
     try {
       const zipEntries = {};
       const usedFolders = new Set();
+      const failed = []; // one bad layer must not cost the user all the others
+      let okCount = 0;
+      let single = null;
       for (const l of sel) {
         const fmt = !l.geometryType ? 'csv' : format === 'kmz' ? 'kml' : format;
         const limit = !isUnlocked && l.featureCount > CFG.freeFeatureLimit ? CFG.freeFeatureLimit : undefined;
-        const r = await call('export', { source: l.source, layer: l.name, format: fmt, limit, hasGeometry: !!l.geometryType });
+        let r;
+        try {
+          r = await call('export', { source: l.source, layer: l.name, format: fmt, limit, hasGeometry: !!l.geometryType });
+        } catch (err) {
+          failed.push({ l, fmt, msg: err.message });
+          track('export_fail', `${exportErrKind(err.message)}:${format}:${geomKey(l.geometryType)}`);
+          continue;
+        }
         if (fmt === 'kml' && format === 'kmz') {
           // KMZ is a zip holding one KML named doc.kml; Google Earth and My Maps open it directly
           r.files = [{ name: `${r.layer}.kmz`, bytes: fflate.zipSync({ 'doc.kml': new Uint8Array(r.files[0].bytes) }, { level: 6 }) }];
           r.ext = 'kmz';
         }
+        okCount++;
         const nice = niceName(l.name);
         if (r.files.length === 1 && sel.length === 1) {
-          const f = r.files[0];
-          download(f.name.includes('.') ? outFileName(f.name, r.layer, nice) : `${nice}.${r.ext}`, f.bytes);
+          single = { r, nice };
         } else {
           // one folder per layer; two layers with the same name (from different geodatabases) must not overwrite each other
           let folder = nice;
@@ -267,18 +287,30 @@
           for (const f of r.files) zipEntries[`${folder}/${outFileName(f.name, r.layer, nice)}`] = new Uint8Array(f.bytes);
         }
       }
-      if (Object.keys(zipEntries).length) {
+      if (single) {
+        const f = single.r.files[0];
+        download(f.name.includes('.') ? outFileName(f.name, single.r.layer, single.nice) : `${single.nice}.${single.r.ext}`, f.bytes);
+      } else if (Object.keys(zipEntries).length) {
         const zipped = fflate.zipSync(zipEntries, { level: 6 });
         download(sel.length === 1 ? `${niceName(sel[0].name)}_${format}.zip` : `geounpack_export_${format}.zip`, zipped, 'application/zip');
+      }
+      const failNote = failed.length
+        ? ` ${failed.length === sel.length ? 'Nothing could be converted' : `${failed.length} of ${sel.length} layers could not be converted`}: `
+          + failed.map((x) => `${x.l.name} (${x.fmt.toUpperCase()}: ${x.msg})`).join('; ')
+          + '. Try another format for those layers (GeoPackage keeps the most), or email the file to hello@geounpack.com so we can fix it.'
+        : '';
+      if (!okCount) {
+        setStatus(failNote.trim(), 'error');
+        return;
       }
       let msg = 'Done. Check your downloads folder.';
       if (format === 'kmz') msg += ' Open the .kmz in Google Earth, or import it into Google My Maps (My Maps accepts up to about 2,000 features per layer).';
       if (format === 'shp') msg += ' Note: Shapefile field names are limited to 10 characters and very large numbers can be truncated; use GeoPackage or GeoJSON if exact values matter.';
       if (!isUnlocked && sel.some((l) => l.featureCount > CFG.freeFeatureLimit)) msg += ` The free version exported the first ${CFG.freeFeatureLimit.toLocaleString()} features.`;
-      track('export_ok', `${format}:${sel.length > 1 ? 'multi' : 'single'}`);
-      setStatus(msg, 'ok');
+      track('export_ok', `${format}:${sel.length > 1 ? 'multi' : 'single'}${failed.length ? ':partial' : ''}`);
+      setStatus(msg + failNote, failed.length ? 'error' : 'ok');
     } catch (err) {
-      track('export_fail', errKind(err.message));
+      track('export_fail', `${exportErrKind(err.message)}:${format}:app`);
       setStatus(err.message, 'error');
     } finally {
       exportBtn.disabled = false;
