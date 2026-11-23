@@ -43,6 +43,22 @@ const server = http.createServer((req, res) => {
       } catch (e) { failures++; console.log(`   ${fmt}: FAIL ${(await page.textContent('#status')).slice(0, 120)}`); }
       await page.waitForFunction(() => !document.querySelector('#export').disabled);
     }
+    // all layers at once (the path real users take with map packages): every format must give a zip with no failed layer
+    if (n > 1) {
+      await page.$$eval('#layers input', (els) => els.forEach((e) => { e.checked = true; }));
+      for (const fmt of ['shp', 'gpkg', 'geojson', 'kml', 'kmz', 'csv']) {
+        // pause like a person would: Chromium silently drops a download started right after another one
+        await page.waitForTimeout(1500);
+        await page.selectOption('#format', fmt);
+        try {
+          const [dl] = await Promise.all([page.waitForEvent('download', { timeout: 240000 }), page.click('#export')]);
+          await page.waitForFunction(() => !document.querySelector('#export').disabled);
+          const st = await page.textContent('#status');
+          if (/could not be converted/.test(st)) { failures++; console.log(`   all-layers ${fmt}: PARTIAL ${st.slice(st.indexOf('could not') - 30, st.indexOf('could not') + 160)}`); }
+          else console.log(`   all-layers ${fmt}: ${dl.suggestedFilename()}`);
+        } catch (e) { failures++; console.log(`   all-layers ${fmt}: FAIL ${(await page.textContent('#status')).slice(0, 160)}`); }
+      }
+    }
     await ctx.close();
   }
   await browser.close(); server.close();

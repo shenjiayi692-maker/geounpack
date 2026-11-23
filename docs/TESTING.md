@@ -23,3 +23,14 @@ Timing: small files < 1 s to open; USA_Counties.lpk (98 MB) ~49 s to open and pr
 - Edge cases: renamed text file (.lpk) → fixed: was showing "[object Object]", now a readable error; zip without GIS data → clear message; zipped .gdb → works (5 layers); 168 MB file → blocked with size message.
 - All 18 pages return 200; no horizontal scroll on a 390 px phone screen.
 - Run against a live URL: `BASE_URL=https://geounpack.pages.dev node scripts/smoke-browser.cjs`; use `PORT=xxxx` if 8799 is busy.
+
+## Samples added 2026-11-23 (all-layers export check)
+The smoke test now also ticks **all layers** and exports every format (users of map packages do this), and fails on any partial export.
+| Source | File |
+|---|---|
+| ArcGIS Online d1e748c1315449ce802b4bdc041c7936 | HydrantInspectionData.mpk (points + related tables) |
+| ArcGIS Online 85c34847bbe1402fa115a1b9b87561ce | RelationshipID.mpkx (two layers named "States" in different geodatabases) |
+| generated: `node scripts/make-curve-sample.mjs samples/curves`, then zip `roads.gdb` + `parcels.gdb` as `samples/curves_gdb.zip` | true curves (circular arcs), like real road/parcel data |
+
+Result 2026-11-23: 6 samples, single-layer and all-layer exports in 6 formats, failures: 0.
+Note: Chromium silently drops a download started immediately after another one, so the test pauses 1.5 s between all-layer exports.
