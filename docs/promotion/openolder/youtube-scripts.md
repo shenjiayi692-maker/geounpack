@@ -153,6 +153,7 @@ Made by Jiayi, an independent developer. Not affiliated with Adobe. Premiere Pro
 **建议：** 每个视频都做**普通横屏版**（主力，靠搜索），再剪一个竖屏 Shorts 版，用"关联视频"指向横屏版。
 
 ### 上传步骤
+0. **先检查账号：** 这些视频发在 **Jiayi Builds Tools（@JiayiBuildsTools）**，不是 China Care Explained。打开 studio.youtube.com 后看左上角频道名和右上角头像；不对就点头像 →“切换账号” → 选 Jiayi Builds Tools。反过来，给 China Care Explained 发视频前也要先切回去。
 1. 打开 studio.youtube.com → 右上角"创建" → "上传视频"。
 2. 填标题、描述（直接复制上面的）、缩略图（普通视频）。
 3. "观众"选"否，不是面向儿童的内容"。

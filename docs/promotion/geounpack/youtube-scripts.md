@@ -7,7 +7,7 @@
   1. 录屏软件：OBS Studio（免费）或 Mac 自带的 Cmd+Shift+5。分辨率 1920×1080，浏览器缩放 125%，关掉书签栏和其他标签页。
   2. **只用公开的示例数据**（`docs/TESTING.md` 里从 ArcGIS Online 下载的公开样本），不要露出任何客户或私人文件。文件名最好简单，如 `parks.lpk`。
   3. 旁白可以自己读（英文慢一点没关系），也可以只放字幕 + 轻音乐。字幕必须有（很多人静音看）。
-  4. 上传时把“简介”整段粘贴进去，链接要能点开。频道“关于”里写一句 “I'm Jiayi, an independent developer in Canada. I build GeoUnpack.”
+  4. **上传前先检查账号：** 发在 **Jiayi Builds Tools（@JiayiBuildsTools）**，不是 China Care Explained。看 YouTube Studio 左上角的频道名和右上角头像，不对就点头像 →“切换账号”。上传时把“简介”整段粘贴进去，链接要能点开。（频道简介和 OpenOlder / GeoUnpack 两个链接已在 2026-11-23 设置好。）
   5. 每条视频另外导出一个竖屏版（9:16，裁掉两边）发 YouTube Shorts，标题相同。
   6. 发布后，把视频链接加到对应工具页面（可以让 Claude 帮你嵌入页面），也可以在 GIS SE 回答里**不要**放视频链接（那里只放文字步骤）。
 - 录之前在 geounpack.com 上实际走一遍，确认按钮名字和下面写的一致（我是按 2026-11-21 的界面写的：“Choose file / or drop it here”、图层列表、“Output format”、“Convert & download”）。
