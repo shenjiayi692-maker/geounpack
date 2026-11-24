@@ -1,6 +1,7 @@
 # GeoUnpack — instructions for Claude Code
 
 Read `docs/HANDOFF.md` first: it has the project background, decisions, status and the task list.
+Before starting any work, read `docs/TODO.md` — the single open-items list for this site. When you finish or change an item, update its status and date there in the same commit. Strategy, keyword scanning and candidate ideas live in Jiayi's handbook (a Claude doc), not in this repo.
 Owner: Jiayi (writes in Chinese — reply in Chinese, plain language, she is not a GIS or web developer).
 
 ## What this is
