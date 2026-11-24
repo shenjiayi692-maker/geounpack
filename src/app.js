@@ -42,6 +42,14 @@
                 : /damaged|reading this file/i.test(m) ? 'read' : 'other');
   const geomKey = (g) => (g ? String(g).toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 18) : 'table');
   const sizeBucket = (mb) => (mb < 1 ? 'lt1mb' : mb < 10 ? '1-10mb' : mb < 50 ? '10-50mb' : '50-150mb');
+  // After an error, add a mail link with a fixed subject tag so real reports stand out from sales email.
+  function addReportLink(what, detail) {
+    const a = document.createElement('a');
+    const body = `Hi,\n\nThis ${what} did not work in GeoUnpack (${location.pathname}).\nWhat it said: ${detail}\n\nI have attached the file (or: I can't share it, but here is what is in it):\n\n`;
+    a.href = `mailto:hello@geounpack.com?subject=${encodeURIComponent(`[GeoUnpack feedback] ${what === 'file' ? 'File that does not open' : 'Layer that does not convert'}`)}&body=${encodeURIComponent(body)}`;
+    a.textContent = 'Email us the file';
+    status.append(' ', a, '.');
+  }
   const $ = (sel) => document.querySelector(sel);
   const drop = $('#drop');
   const input = $('#file');
@@ -239,8 +247,8 @@
     } catch (err) {
       const kind = errKind(err.message);
       track('open_fail', `${kind}:${extOf(file.name)}:${await signature(file)}:${sizeBucket(mb)}`);
-      const ask = kind === 'memory' ? '' : ' If you can share this file, email it to hello@geounpack.com and we will look into why it does not open.';
-      setStatus(err.message + ask, 'error');
+      setStatus(err.message + (kind === 'memory' ? '' : ' If you can share this file, we will look into why it does not open:'), 'error');
+      if (kind !== 'memory') addReportLink('file', err.message);
     }
   }
 
@@ -297,10 +305,11 @@
       const failNote = failed.length
         ? ` ${failed.length === sel.length ? 'Nothing could be converted' : `${failed.length} of ${sel.length} layers could not be converted`}: `
           + failed.map((x) => `${x.l.name} (${x.fmt.toUpperCase()}: ${x.msg})`).join('; ')
-          + '. Try another format for those layers (GeoPackage keeps the most), or email the file to hello@geounpack.com so we can fix it.'
+          + '. Try another format for those layers (GeoPackage keeps the most), or send us the file so we can fix it:'
         : '';
       if (!okCount) {
         setStatus(failNote.trim(), 'error');
+        addReportLink('layer', failed.map((x) => `${x.fmt.toUpperCase()}: ${x.msg}`).join('; '));
         return;
       }
       let msg = 'Done. Check your downloads folder.';
@@ -309,6 +318,7 @@
       if (!isUnlocked && sel.some((l) => l.featureCount > CFG.freeFeatureLimit)) msg += ` The free version exported the first ${CFG.freeFeatureLimit.toLocaleString()} features.`;
       track('export_ok', `${format}:${sel.length > 1 ? 'multi' : 'single'}${failed.length ? ':partial' : ''}`);
       setStatus(msg + failNote, failed.length ? 'error' : 'ok');
+      if (failed.length) addReportLink('layer', failed.map((x) => `${x.fmt.toUpperCase()}: ${x.msg}`).join('; '));
     } catch (err) {
       track('export_fail', `${exportErrKind(err.message)}:${format}:app`);
       setStatus(err.message, 'error');
