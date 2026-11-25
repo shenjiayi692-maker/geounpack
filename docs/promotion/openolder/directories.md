@@ -1,3 +1,5 @@
+> **2026-11-25 状态：** AlternativeTo 已于 11-15 提交，在审核队列里（Gmail 有提醒邮件），不要重复提交。VideoHelp 表单已在 Chrome 填好（软件名、链接、描述，已写明支持 27 → 2026 和更新记录页），等 Jiayi 点 Submit。SaaSHub 提交页写明“AI 代理请让人自己提交”，而且要先注册，所以由 Jiayi 自己填：用下面的 one-liner 和 short description，但要改掉“Premiere 27.0 not supported yet”（现在已支持），竞品至少填一个，否则排到队尾。下面 Shared copy 里关于 27 的限制说法已过时。
+
 > **2026-11-22 更新 / Update：** Premiere 27 支持已上线并经真机验证（27 → 2026 能正常打开）。下文里“不要宣传支持 27”的提醒已失效：现在可以在回复中说支持 27，链接 https://openolder.com/premiere-27-to-2026/ 。Premiere 27 support is live and verified in real Premiere (27 → 2026); the "never claim 27 support" warnings below no longer apply.
 
 # OpenOlder: directory and launch-site submissions

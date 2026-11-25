@@ -19,17 +19,15 @@
 - 下一步：12-19 前后按 DEV_NOTES 11-21 那条做 4 周对比，展示多、点击少的页面再改标题和描述。
 - 日期：2026-11-24 记录
 
-### 3. 候选新页面：open-mpk-in-qgis（优先级低）
-- 证据：Search Console 里“how to open mpk file in qgis”有 2 次展示。现在只有 open-lpk-in-qgis，没有专讲 .mpk 的页面。
-- 下一步：先看 open-lpk-in-qgis 的步骤是否同样适用于 .mpk。适用的话，一个页面写清两种格式；不适用再单独建页。新页面必须写 body（见 DEV_NOTES）。
-- 日期：2026-11-24 记录
-
-### 4. Gmail 过滤器：让用户反馈不进垃圾邮件（只能 Jiayi 做）
+### 3. Gmail 过滤器：让用户反馈不进垃圾邮件（只能 Jiayi 做）
 - 背景：网站上的反馈邮件现在都带固定主题标签 `[GeoUnpack feedback]` / `[OpenOlder feedback]`（推销邮件不会用），方便和推销信区分。
 - 下一步：Jiayi 在 Gmail 建过滤器：主题 `"GeoUnpack feedback" OR "OpenOlder feedback"` → 一律不发送到垃圾邮件、标签“用户反馈”、标记为重要；再用另一个邮箱点网站上的 Tell us 链接测一次（用同一个 Gmail 发会被合并到“已发送”，看不到）。
 - 日期：2026-11-24 记录
 
 ## 最近完成
+- 2026-11-25 open-mpk-in-qgis 不另建页：已核对 open-lpk-in-qgis 的步骤对 .mpk 完全适用（同样是 7-Zip 压缩包，里面是 .gdb），页面的导语、对比表和手动步骤都已写明 .lpk / .mpk。为不干扰 12-19 的 4 周标题对比，本次不改这一页；对比后如果“mpk qgis”类展示明显增长，再考虑在标题或 FAQ 里点名 .mpk。
+- 2026-11-25 用 IndexNow 把站点地图里全部 24 个网址推送给 Bing（经浏览器 GET 推送，抽查 gdb-to-kmz 返回 200）。
+- 2026-11-25 推广：Awesome-Geospatial（Tools 节）和 awesome-gis（SaaS 节）各准备好一个加 GeoUnpack 的 PR，分支 add-geounpack 已推到 Jiayi 的 fork，PR 页面已填好，等 Jiayi 点 Create pull request。
 - 2026-11-24 决定（Jiayi）：暂不加 Google Analytics / Clarity（会用 Cookie，要改隐私页并征得欧盟用户同意）。访问量继续看 Cloudflare Web Analytics，工具使用看 D1。以后要加，连同隐私页和同意提示一起改。
 - 2026-11-24 失败提示后面加“Email us the file”链接，主题带 `[GeoUnpack feedback]`，正文自动填好页面和报错；工具下方的 Tell us 链接改用同样的主题（74c19c9）。
 - 2026-11-24 查看了 hello@geounpack.com 转发的 10 封邮件：都是域名推销，没有用户发来的文件。
