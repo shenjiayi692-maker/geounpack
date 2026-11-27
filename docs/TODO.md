@@ -33,6 +33,7 @@
 - 日期：2026-11-27 记录
 
 ## 最近完成
+- 2026-11-27 About 页加了一行“Other tools by the same developer: Find Shutter Count …”，链接 https://findshuttercount.com/（正常 follow 链接，带 title）。只此一处，单向（findshuttercount 不回链），不是站群互链。测试：LOCAL_GDAL=1 build + smoke（本次只有生成的 curves_gdb.zip 样本，ArcGIS Online 样本下载被网络拦截）failures: 0。
 - 2026-11-27 GitHub 上每次提交都有一个“Workers Builds: geounpack”检查失败：来源是 11-3 误建的同名 Worker（不是网站用的 Pages 项目），没有域名和路由，部署命令 `npx wrangler preview` 缺配置所以每次都失败。按 Jiayi 的选择断开了它的 Git 连接（Worker 保留，不再构建）。网站一直由 Pages 项目 geounpack 部署，不受影响。同日在线上确认了 too_big 新统计生效（拦截 sendBeacon 测试，未写入真实数据）。
 - 2026-11-27 超过 150 MB 的打开失败改为按扩展名和超出大小分段统计（150-300mb / 300-500mb / 500mb-1gb / gt1gb），以后据此判断要不要提高上限。
 - 2026-11-27 Gmail 过滤器已建好（Jiayi）：主题含 GeoUnpack / OpenOlder feedback 的邮件不进垃圾邮件、加“用户反馈”标签、标为重要。
