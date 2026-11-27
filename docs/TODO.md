@@ -24,7 +24,19 @@
 - 下一步：Jiayi 在 Gmail 建过滤器：主题 `"GeoUnpack feedback" OR "OpenOlder feedback"` → 一律不发送到垃圾邮件、标签“用户反馈”、标记为重要；再用另一个邮箱点网站上的 Tell us 链接测一次（用同一个 Gmail 发会被合并到“已发送”，看不到）。
 - 日期：2026-11-24 记录
 
+### 4. 大学图书馆外联：12-6 跟进
+- 状态：11-22 已给 GWU、UNT、Manitoba、UBC、McMaster 发出 5 封（`docs/promotion/geounpack/libguides-outreach.md` 第 1–5 行，表格已记日期）。
+- 下一步：12-6 查 Gmail，只给没回复的几家用文件里的跟进模板在原线程起草回复，**不发送**，交 Jiayi 检查；每家只跟进这一次。回复“no thanks”的不再联系。之后把结果（已收录 / 拒绝 / 无回复）写回表格。
+- 注意：12-6 有一个提醒会发到原来那个混合对话（现在是 OpenOlder 对话）里，以这里的记录为准。
+- 日期：2026-11-27 记录
+
+### 5. Awesome 列表 PR 和其他外链
+- 状态：11-25 Jiayi 已提交两个 PR：sacridini/Awesome-Geospatial（Tools 节）和 sshuair/awesome-gis（SaaS 节），分支都是她 fork 里的 `add-geounpack`。
+- 下一步：每周看一次 PR 有没有评论或被合并；维护者要求改动就在同一分支上改。合并后记在这里。
+- 日期：2026-11-27 记录
+
 ## 最近完成
+- 2026-11-27 OpenOlder 的推广文档搬到 openolder 仓库，这里只留指路说明。以后 OpenOlder 的事只在 openolder 仓库和 OpenOlder 对话里做。
 - 2026-11-25 open-mpk-in-qgis 不另建页：已核对 open-lpk-in-qgis 的步骤对 .mpk 完全适用（同样是 7-Zip 压缩包，里面是 .gdb），页面的导语、对比表和手动步骤都已写明 .lpk / .mpk。为不干扰 12-19 的 4 周标题对比，本次不改这一页；对比后如果“mpk qgis”类展示明显增长，再考虑在标题或 FAQ 里点名 .mpk。
 - 2026-11-25 用 IndexNow 把站点地图里全部 24 个网址推送给 Bing（经浏览器 GET 推送，抽查 gdb-to-kmz 返回 200）。
 - 2026-11-25 推广：Awesome-Geospatial（Tools 节）和 awesome-gis（SaaS 节）各准备好一个加 GeoUnpack 的 PR，分支 add-geounpack 已推到 Jiayi 的 fork，PR 页面已填好，等 Jiayi 点 Create pull request。
