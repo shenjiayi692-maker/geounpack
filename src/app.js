@@ -42,6 +42,8 @@
                 : /damaged|reading this file/i.test(m) ? 'read' : 'other');
   const geomKey = (g) => (g ? String(g).toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 18) : 'table');
   const sizeBucket = (mb) => (mb < 1 ? 'lt1mb' : mb < 10 ? '1-10mb' : mb < 50 ? '10-50mb' : '50-150mb');
+  // only for files over the limit: how far over, so we can tell whether raising the limit would help
+  const bigBucket = (mb) => (mb < 300 ? '150-300mb' : mb < 500 ? '300-500mb' : mb < 1000 ? '500mb-1gb' : 'gt1gb');
   // After an error, add a mail link with a fixed subject tag so real reports stand out from sales email.
   function addReportLink(what, detail) {
     const a = document.createElement('a');
@@ -225,7 +227,7 @@
     if (!file) return;
     const mb = file.size / 1e6;
     if (mb > CFG.maxFileMB) {
-      track('open_fail', 'too_big');
+      track('open_fail', `too_big:${extOf(file.name)}:${bigBucket(mb)}`);
       setStatus(`This file is ${mb.toFixed(0)} MB. The current limit is ${CFG.maxFileMB} MB so your browser does not run out of memory.`, 'error');
       return;
     }
