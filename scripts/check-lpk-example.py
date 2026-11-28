@@ -11,7 +11,9 @@ base = sys.argv[1].rstrip("/")
 with sync_playwright() as pw, TemporaryDirectory(dir=Path.cwd()) as tmp:
     browser = pw.chromium.launch(executable_path=sys.argv[2] if len(sys.argv) > 2 else None)
     page = browser.new_page()
-    page.goto(base + "/lpk-to-shapefile/")
+    page.goto(base + "/lpkx-to-shapefile/")
+    page.get_by_role("link", name="See how two fields with the same prefix appear in a Shapefile.").click()
+    expect(page).to_have_url(base + "/lpk-to-shapefile/#survey-example")
     with page.expect_download() as sample:
         page.get_by_text("Download the two-layer survey example").click()
     pkg = Path(tmp) / "survey.lpk"
@@ -19,6 +21,11 @@ with sync_playwright() as pw, TemporaryDirectory(dir=Path.cwd()) as tmp:
     page.evaluate("() => { L.Map.addInitHook(function () { window.surveyMap = this }) }")
     page.locator("#file").set_input_files(pkg)
     rows = page.locator("#layers tr")
+    expect(rows).to_have_count(2, timeout=90000)
+    expect(page.locator("#status")).to_contain_text("Showing", timeout=30000)
+    page.reload()
+    page.evaluate("() => { L.Map.addInitHook(function () { window.surveyMap = this }) }")
+    page.get_by_role("button", name="Try the two-layer example").click()
     expect(rows).to_have_count(2, timeout=90000)
     expect(page.locator("#status")).to_contain_text("Showing", timeout=30000)
     for layer, values in [("stations", ["Alpha", "Beta"]), ("routes", ["Connector"])]:

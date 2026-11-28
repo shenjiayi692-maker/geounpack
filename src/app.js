@@ -223,8 +223,13 @@
     setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 2000);
   }
 
-  async function handleFile(file) {
+  const trySurvey = $('#try-survey');
+  let sampleRequest;
+  let viewingSample = false;
+
+  async function handleFile(file, sample = false) {
     if (!file) return;
+    sampleRequest?.abort();
     const mb = file.size / 1e6;
     if (mb > CFG.maxFileMB) {
       track('open_fail', `too_big:${extOf(file.name)}:${bigBucket(mb)}`);
@@ -239,7 +244,8 @@
     setStatus(`Opening ${file.name}…`, 'busy');
     try {
       layers = await call('open', { file });
-      track('open_ok', `${(file.name.match(/\.(lpkx?|mpkx?|zip|7z)$/i) || [, 'other'])[1].toLowerCase()}:${sizeBucket(mb)}`);
+      viewingSample = sample;
+      track('open_ok', sample ? 'sample' : `${(file.name.match(/\.(lpkx?|mpkx?|zip|7z)$/i) || [, 'other'])[1].toLowerCase()}:${sizeBucket(mb)}`);
       renderLayers();
       panel.hidden = false;
       const geomCount = layers.filter((l) => l.geometryType).length;
@@ -318,7 +324,7 @@
       if (format === 'kmz') msg += ' Open the .kmz in Google Earth, or import it into Google My Maps (My Maps accepts up to about 2,000 features per layer).';
       if (format === 'shp') msg += ' Note: Shapefile field names are limited to 10 characters and very large numbers can be truncated; use GeoPackage or GeoJSON if exact values matter.';
       if (!isUnlocked && sel.some((l) => l.featureCount > CFG.freeFeatureLimit)) msg += ` The free version exported the first ${CFG.freeFeatureLimit.toLocaleString()} features.`;
-      track('export_ok', `${format}:${sel.length > 1 ? 'multi' : 'single'}${failed.length ? ':partial' : ''}`);
+      track('export_ok', `${viewingSample ? 'sample:' : ''}${format}:${sel.length > 1 ? 'multi' : 'single'}${failed.length ? ':partial' : ''}`);
       setStatus(msg + failNote, failed.length ? 'error' : 'ok');
       if (failed.length) addReportLink('layer', failed.map((x) => `${x.fmt.toUpperCase()}: ${x.msg}`).join('; '));
     } catch (err) {
@@ -328,6 +334,24 @@
       exportBtn.disabled = false;
     }
   }
+
+  trySurvey?.addEventListener('click', async () => {
+    if (status.classList.contains('busy') || exportBtn.disabled && !panel.hidden) return;
+    trySurvey.disabled = true;
+    sampleRequest = new AbortController();
+    setStatus('Loading the survey example…', 'busy');
+    try {
+      const response = await fetch($('#survey-download').href, { signal: sampleRequest.signal });
+      if (!response.ok) throw new Error('Download failed');
+      const blob = await response.blob();
+      await handleFile(new File([blob], 'survey.lpk'), true);
+    } catch (err) {
+      if (err.name !== 'AbortError') setStatus('Could not load the example. Try again or download the file.', 'error');
+    } finally {
+      sampleRequest = null;
+      trySurvey.disabled = false;
+    }
+  });
 
   // events
   drop.addEventListener('click', () => input.click());

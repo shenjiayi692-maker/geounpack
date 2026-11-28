@@ -43,6 +43,10 @@ const CONTENT_UPDATED = '2026-11-13';
 const fitTitle = (t) => (t.length > 60 ? t.replace(/ \| GeoUnpack$/, '') : t);
 // plain text with `code` spans
 const rich = (s) => esc(s).replace(/`([^`]+)`/g, '<code>$1</code>');
+function listItem(item) {
+  if (typeof item === 'string') return rich(item);
+  return `${rich(item.text)} <a href="${esc(item.href)}">${esc(item.label)}</a>`;
+}
 const OG_IMAGE = `${SITE}/og.png`;
 const url = (slug) => `${SITE}/${slug ? slug + '/' : ''}`;
 const nav = `<a href="/lpk-to-shapefile/">LPK</a><a href="/mpk-to-shapefile/">MPK</a><a href="/gdb-to-shapefile/">GDB</a><a href="/#formats">Formats</a>`;
@@ -57,7 +61,7 @@ for (const p of pages) {
     const [head, ...rows] = p.compare;
     compare = `<section><h2>Comparison</h2><div class="table-wrap"><table class="compare"><thead><tr>${head.map((h) => `<th>${esc(h)}</th>`).join('')}</tr></thead><tbody>${rows.map((r) => `<tr>${r.map((c, i) => (i ? `<td>${esc(c)}</td>` : `<th>${esc(c)}</th>`)).join('')}</tr>`).join('')}</tbody></table></div></section>`;
   }
-  const body = (p.body || []).map((s) => `<section><h2>${esc(s.h2)}</h2>${s.p.map((t) => `<p>${rich(t)}</p>`).join('')}${s.list ? `<ul>${s.list.map((t) => `<li>${rich(t)}</li>`).join('')}</ul>` : ''}</section>`).join('\n  ');
+  const body = (p.body || []).map((s) => `<section><h2>${esc(s.h2)}</h2>${s.p.map((t) => `<p>${rich(t)}</p>`).join('')}${s.list ? `<ul>${s.list.map((t) => `<li>${listItem(t)}</li>`).join('')}</ul>` : ''}</section>`).join('\n  ');
   const jsonld = JSON.stringify([
     {
       '@context': 'https://schema.org', '@type': 'SoftwareApplication', name: 'GeoUnpack',
@@ -83,7 +87,7 @@ for (const p of pages) {
     .replaceAll('{{title}}', esc(fitTitle(p.title)))
     .replace('{{ogimage}}', OG_IMAGE)
     .replace('{{example}}', p.slug === 'lpk-to-shapefile'
-      ? '<p><a href="/examples/survey.lpk" download>Download the two-layer survey example</a> (CC0). Open it above, then preview stations or routes and click a feature to inspect its attributes. Export each layer as Shapefile to compare the shortened field names. This synthetic package models the embedded geodatabase only.</p>'
+      ? '<div id="survey-example"><p><button type="button" id="try-survey">Try the two-layer example</button> · <a id="survey-download" href="/examples/survey.lpk" download>Download the two-layer survey example</a> (CC0)</p><p>Preview stations or routes and click a feature. In the Shapefile export, <code>inspection_label</code> becomes <code>inspection</code> and <code>inspection_status</code> becomes <code>inspecti_1</code>. This synthetic package models the embedded geodatabase only.</p></div>'
       : '')
     .replace('{{body}}', body)
     .replaceAll('{{description}}', esc(p.description))

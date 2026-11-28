@@ -60,6 +60,7 @@
   },
   {
     "slug": "lpk-to-shapefile",
+    "updated": "2026-11-28",
     "title": "LPK to Shapefile Converter: ArcGIS Layer Package to SHP Online | GeoUnpack",
     "h1": "LPK to Shapefile Converter",
     "description": "Convert .lpk and .lpkx layer packages to Shapefile (.shp) online without ArcGIS. Free, runs in your browser, files are never uploaded.",
@@ -564,6 +565,7 @@
   },
   {
     "slug": "lpkx-to-shapefile",
+    "updated": "2026-11-28",
     "title": "LPKX to Shapefile: Convert ArcGIS Pro Layer Packages Online | GeoUnpack",
     "h1": "LPKX to Shapefile Converter",
     "description": "Convert ArcGIS Pro .lpkx layer packages to Shapefile, GeoPackage or GeoJSON online. No ArcGIS Pro needed, files are not uploaded.",
@@ -597,7 +599,11 @@
         "h2": "Things to know before converting",
         "p": [],
         "list": [
-          "ArcGIS Pro layer names and field names are often long. Shapefile cuts field names to 10 characters; choose GeoPackage if you want them intact.",
+          {
+            "text": "ArcGIS Pro layer names and field names are often long. Shapefile cuts field names to 10 characters; choose GeoPackage if you want them intact.",
+            "href": "/lpk-to-shapefile/#survey-example",
+            "label": "See how two fields with the same prefix appear in a Shapefile."
+          },
           "3D layers lose their Z values in Shapefile export. GeoPackage and GeoJSON keep them.",
           "An `.lpkx` made from a raster, mosaic, scene or tile layer has no vector data to export, and GeoUnpack will tell you so.",
           "Packages created with “reference all data” contain only pointers to a network drive or enterprise database; ask the author to share it with the data included."
