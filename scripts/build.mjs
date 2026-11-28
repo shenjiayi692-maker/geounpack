@@ -1,9 +1,10 @@
 // Static site generator for GeoUnpack: renders every converter page from src/pages.json
 // and copies the WebAssembly libraries into dist/vendor.
+import { fileURLToPath } from 'node:url';
 import fs from 'node:fs';
 import path from 'node:path';
 
-const root = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const NOINDEX = process.env.NOINDEX === '1'; // preview deployments: keep out of search engines
 const SITE = (process.env.SITE_URL || 'https://geounpack.com').replace(/\/$/, '');
 const dist = path.join(root, 'dist');
@@ -81,6 +82,9 @@ for (const p of pages) {
   const html = tpl
     .replaceAll('{{title}}', esc(fitTitle(p.title)))
     .replace('{{ogimage}}', OG_IMAGE)
+    .replace('{{example}}', p.slug === 'lpk-to-shapefile'
+      ? '<p><a href="/examples/survey.lpk" download>Download the two-layer survey example</a> (CC0). Open it above, then preview stations or routes and click a feature to inspect its attributes. Export each layer as Shapefile to compare the shortened field names. This synthetic package models the embedded geodatabase only.</p>'
+      : '')
     .replace('{{body}}', body)
     .replaceAll('{{description}}', esc(p.description))
     .replaceAll('{{canonical}}', url(p.slug))
