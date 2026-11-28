@@ -150,4 +150,15 @@ fs.writeFileSync(path.join(dist, 'robots.txt'), NOINDEX ? 'User-agent: *\nDisall
 fs.writeFileSync(path.join(dist, 'llms.txt'),
   `# GeoUnpack\n\n> Free browser-based tool to open and convert Esri ArcGIS layer packages (.lpk, .lpkx), map packages (.mpk, .mpkx) and zipped file geodatabases (.gdb), plus KML/KMZ files and shapefiles, to Shapefile, GeoPackage, GeoJSON, KML, KMZ and CSV without ArcGIS. Conversion runs locally in the browser with GDAL compiled to WebAssembly; files are never uploaded.\n\n## Converters\n${pages.map((p) => `- [${p.h1}](${url(p.slug)}): ${p.description}`).join('\n')}\n\n## About\n- [About GeoUnpack](${url('about')}): who makes it, how it works, contact\n\n## Limits\n- Vector layers and tables only (no raster, tile or scene packages yet)\n- Files up to 150 MB\n`);
 
+// Browsers keep app.js / styles.css / togeojson for a while: reference them with a content hash so every
+// page always loads the matching files (an old app.js with a new page, or the reverse, breaks the tool).
+const hashOf = (f) => crypto.createHash('sha256').update(fs.readFileSync(path.join(dist, f))).digest('hex').slice(0, 10);
+const assetRefs = { '/app.js"': `/app.js?v=${hashOf('app.js')}"`, '/styles.css"': `/styles.css?v=${hashOf('styles.css')}"` };
+const htmlFiles = (dir) => fs.readdirSync(dir, { withFileTypes: true }).flatMap((e) => (e.isDirectory() ? htmlFiles(path.join(dir, e.name)) : e.name.endsWith('.html') ? [path.join(dir, e.name)] : []));
+for (const f of htmlFiles(dist)) {
+  let h = fs.readFileSync(f, 'utf8');
+  for (const [from, to] of Object.entries(assetRefs)) h = h.replaceAll(`"${from}`, `"${to}`);
+  fs.writeFileSync(f, h);
+}
+
 console.log(`Built ${pages.length + prose.length} pages into dist/ for ${SITE}${NOINDEX ? ' (noindex preview)' : ''}`);
