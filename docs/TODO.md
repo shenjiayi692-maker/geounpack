@@ -38,6 +38,7 @@
 - 背景：`docs/promotion/geounpack/other-channels.md`（11-21 核实）准备好了文案：① QGIS Canada 用户组自我介绍（1A）→ 1–2 周后问能否做 5 分钟演示（1B）；② Mapstodon 注册、养一周再发工具介绍；③ Show HN（只发一次，要有 1–2 小时守着回复）；④ HANDOFF B4 的 AlternativeTo 收录。Geography Realm、Geoawesome 可选。
 - 状态（11-28 核查）：④ AlternativeTo 已提交（11-13 注册，11-15 进普通审核队列，11-22 最后一封提醒：队列几千个、可能很久不审，可付一次性费用插队，1–2 个工作日审，审前可全额退款）。① QGIS Canada、② Mapstodon、③ Show HN 都没找到记录（OSGeo Discourse、Mapstodon、HN 搜不到 geounpack，Gmail 里也没有这几个网站的注册邮件），按没做处理。
 - 11-28 Jiayi 决定：AlternativeTo 不付费插队，留在普通队列。其余按 ①→③ 每周一项，Claude 每次先核实文案和规则还适用，发帖由 Jiayi 点发送。
+- 11-28：① 的文案 1A 已复核（帖子开放、规则没变），城市已填，另加了法语版，在 other-channels.md。等 Jiayi 用自己的 OSGeo 账号发；发了告诉 Claude，1–2 周后再看要不要发 1B。
 - 日期：2026-11-28 记录
 
 ### 7. 相邻格式页面：第二批（等第一批收录后再做）
@@ -47,6 +48,7 @@
 - 日期：2026-11-28 记录
 
 ## 最近完成
+- 2026-11-28 IndexNow 推送了 5 个新页面和改过的 about、licenses、lpk-to-shapefile、lpkx-to-shapefile（浏览器 GET）。上线时发现浏览器缓存会让新页面配旧 app.js/worker，已改成所有脚本和样式带内容哈希，线上用 KMZ 实测打开正常（拦截了统计，没写入假数据）。
 - 2026-11-28 KML / KMZ / Shapefile 输入上线，新增 5 个页面（见第 7 项和 DEV_NOTES 11-28）。
 - 2026-11-28 Search Console 周查（PLAYBOOK 1.5），过去 28 天：26 次点击、595 次展示、平均排名 8。25 个查询词都已有对应页面（错拼如 gdp to kml、lplx、lpkz 落在现有页面上）；唯一没有专页的是“how to open mpk file (in qgis / arcgis pro)”，合计约 5 次展示，按 11-25 的决定等 12-19 对比后再看。本周不新建页面，也不改标题。点击主要来自 mpk-to-shapefile（6）、gdb-to-kmz（4）、mpk-viewer（3）。
 - 2026-11-28 main 分支同步到 mvp-v0.1（用合并提交，没有强推；main 上有一条 11-28 直接提交的 survey.lpk 示例，mvp-v0.1 上已有同样内容）。以后提交都推到 mvp-v0.1，再同步 main。

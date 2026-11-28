@@ -23,13 +23,24 @@
 - 怎么提交：用 OSGeo 账号登录（右上角 Sign Up / Log In），在介绍帖里点 “Reply”。
 - 注意：这是开源社区。GeoUnpack 本身不是开源的，但用的是 GDAL 和 7-Zip。说话要突出“帮 QGIS 用户打开 Esri 文件”，并且**同时给出不用工具的 QGIS 方法**。
 
+**2026-11-28 复核：** 介绍帖仍开放（7 条，最近一条 11-20），大家都是普通自我介绍（蒙特利尔、魁北克、BC、安省的 GIS 用户），版块规则没变。有一位提到魁北克 QGIS 用得少，用法语介绍也完全合适，下面附法语版。城市已填 Montreal area。
+
 **文案 1A（自我介绍，回复在 Introductions 帖子里）：**
 ```
-Hi everyone, I'm Jiayi, an independent developer based in [city], Canada. I'm not a GIS professional by training, but I kept running into the same problem friends had: someone sends them an Esri .lpk, .mpk or .gdb and they don't have ArcGIS.
+Hi everyone, I'm Jiayi, an independent developer based in the Montreal area. I'm not a GIS professional by training, but I kept running into the same problem friends had: someone sends them an Esri .lpk, .mpk or .gdb and they don't have ArcGIS.
 
 The QGIS route works well once you know it (extract the package with 7-Zip, then drag the .gdb folder into QGIS — OpenFileGDB reads it natively), so I've been writing that up, and I also built a small free browser tool, GeoUnpack (https://geounpack.com/), that does the unpacking/conversion locally with GDAL compiled to WebAssembly, for people who can't install anything.
 
 Happy to be here and to learn from the group. If anyone has Esri packages that misbehave in QGIS, I'd love to hear about them.
+```
+
+**文案 1A 法语版（二选一，别两个都发）：**
+```
+Bonjour à tous, je m'appelle Jiayi, développeuse indépendante dans la région de Montréal. Je ne suis pas géomaticienne de formation, mais je voyais souvent le même problème autour de moi : quelqu'un reçoit un fichier Esri .lpk, .mpk ou .gdb et n'a pas ArcGIS.
+
+Avec QGIS, ça marche bien une fois qu'on connaît la méthode (extraire le paquet avec 7-Zip, puis glisser le dossier .gdb dans QGIS, que le pilote OpenFileGDB lit directement). J'ai aussi fait un petit outil gratuit dans le navigateur, GeoUnpack (https://geounpack.com/), qui fait la décompression et la conversion localement avec GDAL compilé en WebAssembly, pour ceux qui ne peuvent rien installer.
+
+Contente d'être ici et d'apprendre avec le groupe. Si vous avez des paquets Esri qui posent problème dans QGIS, ça m'intéresse beaucoup.
 ```
 
 **文案 1B（单独发帖，标题 + 正文；介绍帖之后 1–2 周再发）：**
