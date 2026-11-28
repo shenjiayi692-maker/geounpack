@@ -1086,5 +1086,227 @@
         ]
       }
     ]
+  },
+  {
+    "slug": "kml-to-shapefile",
+    "title": "KML to Shapefile Converter: KML to SHP Online, No Upload",
+    "h1": "KML to Shapefile Converter",
+    "from": "KML",
+    "defaultFormat": "shp",
+    "updated": "2026-11-28",
+    "description": "Convert KML to Shapefile (SHP) in your browser. Keeps placemark names, descriptions and ExtendedData attributes, splits points, lines and polygons into separate shapefiles. Files are not uploaded.",
+    "subtitle": "Turn a Google Earth or Google My Maps KML into shapefiles for ArcGIS or QGIS. The file never leaves your computer.",
+    "lead": "Drop a .kml (or .kmz) file below. GeoUnpack reads every folder and placemark, shows them on a map, and writes a Shapefile set (.shp, .shx, .dbf, .prj) you can open in ArcGIS, QGIS or any GIS.",
+    "steps": [
+      "Drop the .kml file into the box (a .kmz works too).",
+      "Check the layers: one per KML folder, split into points, lines and polygons where a folder mixes them.",
+      "Tick the layers you need, keep SHP selected and click Convert & download. You get a .zip with the shapefile parts."
+    ],
+    "faq": [
+      [
+        "Why do I get several shapefiles from one KML?",
+        "A shapefile can hold only one geometry type, while one KML folder can mix points, lines and polygons. GeoUnpack makes one layer per folder and type, for example “Trails (points)” and “Trails (lines)”."
+      ],
+      [
+        "Are my KML attributes kept?",
+        "Yes: the placemark name, the description and every ExtendedData field become columns in the .dbf. Shapefile column names are cut to 10 characters and text to 254 characters, so very long HTML descriptions are shortened; export to GeoPackage if you need them whole."
+      ],
+      [
+        "What coordinate system does the shapefile use?",
+        "KML is always longitude/latitude on WGS84, so the shapefile comes with a WGS84 (EPSG:4326) .prj file. Reproject it in ArcGIS or QGIS if your project uses a different system."
+      ]
+    ],
+    "body": [
+      {
+        "h2": "What gets converted",
+        "p": [
+          "Placemarks with points, lines (including GPS tracks) and polygons, the folder they are in, their name, description and ExtendedData values. Altitude is dropped because 2D shapefiles are what most programs expect.",
+          "Not converted: styles (colours, icons, line widths), labels, ground overlays and other images, 3D models and network links. A shapefile stores geometry and attributes only; symbology is set again in your GIS."
+        ]
+      },
+      {
+        "h2": "Other ways to convert KML to shapefile",
+        "p": [
+          "In QGIS, drag the .kml into the map, then right-click each layer and choose Export > Save Features As > ESRI Shapefile. In ArcGIS Pro, use the KML To Layer tool and then Feature Class To Shapefile. On the command line, GDAL’s `ogr2ogr -f \"ESRI Shapefile\" out.shp in.kml` does the same; mixed geometry types need one command per type."
+        ]
+      }
+    ]
+  },
+  {
+    "slug": "kmz-to-shapefile",
+    "title": "KMZ to Shapefile Converter: Convert KMZ to SHP Online, Free",
+    "h1": "KMZ to Shapefile Converter",
+    "from": "KMZ",
+    "defaultFormat": "shp",
+    "updated": "2026-11-28",
+    "description": "Convert a KMZ file from Google Earth or Google My Maps to Shapefile (SHP) in your browser. Unzips the KMZ, keeps names and attributes, splits points, lines and polygons. No upload.",
+    "subtitle": "Unzip a Google Earth KMZ and save its placemarks as shapefiles. Everything happens in your browser.",
+    "lead": "A .kmz is a zipped KML: a doc.kml file plus any icons or images it uses. Drop it below and GeoUnpack unzips it, reads the KML inside and converts each folder to a shapefile you can open in ArcGIS or QGIS.",
+    "steps": [
+      "Drop the .kmz file into the box.",
+      "Preview the layers on the map: one per folder, split by points, lines and polygons.",
+      "Tick the layers you need, keep SHP selected and click Convert & download."
+    ],
+    "faq": [
+      [
+        "Can ArcGIS or QGIS open a KMZ directly?",
+        "QGIS opens most KMZ files by dragging them in. ArcGIS Pro can read them with the KML To Layer tool, which creates a file geodatabase; you then export to shapefile. This page does both steps in one, without installing anything."
+      ],
+      [
+        "Why does the KMZ give several shapefiles?",
+        "Each shapefile can store only points, only lines or only polygons. When a folder in the KMZ mixes them, you get one shapefile per type, named after the folder."
+      ],
+      [
+        "Are the icons and images in the KMZ converted?",
+        "No. They are pictures used for display. The shapefile keeps the geometry and attributes (name, description, ExtendedData); symbology is set again in your GIS."
+      ]
+    ],
+    "body": [
+      {
+        "h2": "What is inside a KMZ",
+        "p": [
+          "Rename a `.kmz` to `.zip` and you will see a `doc.kml` file, often with a `files` or `images` folder for icons and photos. All the map data is in the KML. GeoUnpack reads the main KML (the one at the top level, usually doc.kml) and ignores the images."
+        ]
+      },
+      {
+        "h2": "Limits of the Shapefile format",
+        "p": [
+          "Column names are at most 10 characters, text values at most 254 characters, and each file holds one geometry type. If your KMZ has long HTML descriptions or field names, choose GeoPackage instead: it keeps everything and both ArcGIS and QGIS open it.",
+          "The output uses WGS84 longitude/latitude (EPSG:4326), the coordinate system of every KML and KMZ."
+        ]
+      }
+    ]
+  },
+  {
+    "slug": "kmz-to-kml",
+    "title": "KMZ to KML Converter: Extract the KML from a KMZ File",
+    "h1": "KMZ to KML Converter",
+    "from": "KMZ",
+    "defaultFormat": "kml",
+    "updated": "2026-11-28",
+    "description": "Convert KMZ to KML in your browser: download the original KML inside the KMZ, or a clean KML rebuilt from its placemarks and attributes. No upload, no sign-up.",
+    "subtitle": "Get a plain .kml out of a .kmz from Google Earth or Google My Maps. Nothing is uploaded.",
+    "lead": "Some apps and websites accept KML but not KMZ. Drop the .kmz below: you can download the original KML stored inside it unchanged, or a clean KML rebuilt from its placemarks, one file per layer you select.",
+    "steps": [
+      "Drop the .kmz file into the box.",
+      "To keep everything as it was (styles, icons, folders), click “download the original KML” in the message that appears.",
+      "For a clean KML of selected layers only, tick them, keep KML selected and click Convert & download."
+    ],
+    "faq": [
+      [
+        "Is KMZ to KML just unzipping?",
+        "Yes. A KMZ is a zip file containing doc.kml and any images. You can also rename the .kmz to .zip and extract doc.kml yourself; this page does it in one click, on any device."
+      ],
+      [
+        "Which KML should I download?",
+        "The original KML keeps styles, icons and the folder tree exactly as the author made them, but icons stored inside the KMZ will no longer display because they are not in the KML. The rebuilt KML contains only the data (geometry, name, description and attributes) and is the safer choice for importing into other software."
+      ],
+      [
+        "Will Google My Maps accept the KML?",
+        "Yes. My Maps imports KML and KMZ files; it accepts up to about 2,000 features per layer, so split very large files into several layers."
+      ]
+    ],
+    "body": [
+      {
+        "h2": "Why convert KMZ to KML",
+        "p": [
+          "KML is plain text (XML), so you can open it in a text editor, track it in version control, or load it into tools that do not unzip files, such as some web maps, GPS apps and scripts. KMZ is smaller and bundles images, which is why Google Earth saves KMZ by default."
+        ]
+      },
+      {
+        "h2": "What the rebuilt KML contains",
+        "p": [
+          "One KML per selected layer with each placemark’s geometry, name, description and ExtendedData attributes, in WGS84 longitude/latitude. Folders with mixed points, lines and polygons are split by type. Styles, overlays and network links are left out."
+        ]
+      }
+    ]
+  },
+  {
+    "slug": "shapefile-to-kml",
+    "title": "Shapefile to KML Converter: SHP to KML for Google Earth",
+    "h1": "Shapefile to KML Converter",
+    "from": "SHP",
+    "defaultFormat": "kml",
+    "updated": "2026-11-28",
+    "description": "Convert a shapefile (SHP) to KML for Google Earth or Google My Maps, in your browser. Reprojects to WGS84 from the .prj file and keeps the attributes. No upload.",
+    "subtitle": "Open your .shp in Google Earth: select the shapefile’s files (or a .zip of them) and download a KML.",
+    "lead": "A shapefile is several files with the same name. Select the .shp, .shx and .dbf together (plus the .prj if there is one), or drop a .zip that contains them. GeoUnpack reprojects the data to longitude/latitude and writes a KML that Google Earth and Google My Maps open.",
+    "steps": [
+      "Select the shapefile’s files together (.shp, .shx, .dbf, .prj) or drop a .zip of them.",
+      "Preview the layer on the map to check it lands in the right place.",
+      "Keep KML selected (or pick KMZ for a smaller file) and click Convert & download."
+    ],
+    "faq": [
+      [
+        "Which files do I need?",
+        "At least the .shp (shapes), .shx (index) and .dbf (attributes). The .prj (coordinate system) is needed to place the data correctly on the globe; .cpg tells the text encoding. Select them all at once, or zip them first."
+      ],
+      [
+        "My shapefile has no .prj file. Will it work?",
+        "Only if the coordinates are already longitude/latitude. GeoUnpack then keeps them as they are and says so. If the data is in a projected system (metres or feet), ask the sender for the .prj, or assign the coordinate system in QGIS first."
+      ],
+      [
+        "Are the attributes kept in the KML?",
+        "Yes. Every .dbf column is written to the KML as ExtendedData, which Google Earth shows in the placemark balloon and My Maps shows as table columns."
+      ]
+    ],
+    "body": [
+      {
+        "h2": "Coordinate systems",
+        "p": [
+          "KML is always WGS84 longitude/latitude. Shapefiles are often in a projected system such as UTM or a State Plane zone, described in the .prj file. GeoUnpack reads the .prj and reprojects every coordinate with GDAL, so the KML lines up in Google Earth."
+        ]
+      },
+      {
+        "h2": "Other ways to do it",
+        "p": [
+          "Google Earth Pro can import a shapefile directly (File > Import) and then save it as KML. In QGIS, right-click the layer, Export > Save Features As > Keyhole Markup Language. On the command line: `ogr2ogr -f KML out.kml in.shp`. This page needs no install and works on a Chromebook or a locked-down work computer."
+        ]
+      }
+    ]
+  },
+  {
+    "slug": "shapefile-to-kmz",
+    "title": "Shapefile to KMZ Converter: SHP to KMZ Online, Free",
+    "h1": "Shapefile to KMZ Converter",
+    "from": "SHP",
+    "defaultFormat": "kmz",
+    "updated": "2026-11-28",
+    "description": "Convert a shapefile to KMZ for Google Earth and Google My Maps, in your browser. Select the .shp, .shx, .dbf and .prj files or a .zip; attributes are kept. No upload.",
+    "subtitle": "Make a compact KMZ from a shapefile, ready for Google Earth or Google My Maps. Nothing is uploaded.",
+    "lead": "Select the shapefile’s files together (.shp, .shx, .dbf and .prj) or drop a .zip containing them. GeoUnpack reprojects the data to longitude/latitude, writes it as KML and zips it into a .kmz, which is smaller and easier to email or upload.",
+    "steps": [
+      "Select the .shp, .shx, .dbf and .prj files together, or drop a .zip of them.",
+      "Preview the layer to check its position.",
+      "Keep KMZ selected and click Convert & download, then open the .kmz in Google Earth or import it into My Maps."
+    ],
+    "faq": [
+      [
+        "KMZ or KML: which should I choose?",
+        "Both hold the same data. KMZ is the KML zipped, typically several times smaller, and is what Google Earth saves by default. Choose KML if the app you are sending it to does not accept KMZ."
+      ],
+      [
+        "How many features can Google My Maps import?",
+        "About 2,000 features per layer. For bigger shapefiles, open the KMZ in Google Earth Pro instead, or split the data first."
+      ],
+      [
+        "Will the colours from ArcGIS or QGIS come across?",
+        "No. A shapefile stores no symbology, so the KMZ uses Google Earth’s default style. You can restyle it in Google Earth or My Maps."
+      ]
+    ],
+    "body": [
+      {
+        "h2": "What you get",
+        "p": [
+          "A .kmz containing a single doc.kml, with each shape as a placemark and every attribute column as ExtendedData. The coordinates are reprojected from the system in the .prj to WGS84, as KML requires. Multipart shapes stay multipart."
+        ]
+      },
+      {
+        "h2": "When the shapefile will not open",
+        "p": [
+          "Make sure the .shp, .shx and .dbf have exactly the same name and are selected together; a .shp on its own cannot be read. If you received a .zip, drop the .zip itself. Shapefiles inside an Esri layer or map package (.lpk, .mpk) work too: drop the package on the home page."
+        ]
+      }
+    ]
   }
 ]

@@ -1,5 +1,5 @@
 /* GeoUnpack UI (main thread). Conversion happens in /worker.js. */
-/* global L, fflate */
+/* global L, fflate, toGeoJSON */
 (function () {
   const CFG = Object.assign(
     {
@@ -15,7 +15,7 @@
 
   // Anonymous usage count (see functions/api/e.js): event name and a short category only.
   const track = (e, d) => { try { navigator.sendBeacon('/api/e', JSON.stringify({ e, d: d || '', p: location.pathname })); } catch (_) { /* ignore */ } };
-  const errKind = (m) => (/memory/i.test(m) ? 'memory' : /unpacked|damaged/i.test(m) ? 'unpack' : /No geodatabase|raster/i.test(m) ? 'no_vector' : /engine/i.test(m) ? 'engine' : 'other');
+  const errKind = (m) => (/memory/i.test(m) ? 'memory' : /valid KML/i.test(m) ? 'bad_kml' : /unpacked|damaged/i.test(m) ? 'unpack' : /No geodatabase|raster|No points, lines|No KML file|No \.shp/i.test(m) ? 'no_vector' : /companion files/i.test(m) ? 'shp_parts' : /engine/i.test(m) ? 'engine' : 'other');
   // For diagnosing failed opens without knowing the file: its extension and what its first bytes say it really is.
   const extOf = (name) => { const m = /\.([a-z0-9]{1,6})$/i.exec(name); return m ? m[1].toLowerCase() : 'none'; };
   async function signature(file) {
@@ -157,7 +157,7 @@
         `<td class="num">${fmtCount(l.featureCount)}</td>` +
         `<td>${l.crs ? escapeHtml(l.crs) : '–'}</td>` +
         `<td>${l.geometryType && l.featureCount ? `<button type="button" class="link" data-preview="${idx}">Preview</button>` : ''}</td>`;
-      tr.querySelector('label').textContent = l.name + (multiSource() ? ` (${l.sourceLabel})` : '');
+      tr.querySelector('label').textContent = l.name + (multiSource() && l.sourceLabel !== l.name ? ` (${l.sourceLabel})` : '');
       layersEl.appendChild(tr);
     });
   }
@@ -181,7 +181,7 @@
     map.invalidateSize();
     setStatus(`Loading preview of ${l.name}…`, 'busy');
     try {
-      const gj = await call('preview', { source: l.source, layer: l.name, maxFeatures: 2000 });
+      const gj = await call('preview', { source: l.source, layer: l.name, maxFeatures: 2000, noCrs: !l.crs });
       if (previewLayer) previewLayer.remove();
       previewLayer = L.geoJSON(gj, {
         pointToLayer: (_f, latlng) => L.circleMarker(latlng, { radius: 4 }),
@@ -223,38 +223,160 @@
     setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 2000);
   }
 
+  // ---- KML / KMZ: converted to GeoJSON here (DOMParser is not available inside the worker) ----
+  const STYLE_KEYS = /^(styleUrl|styleHash|styleMapHash|stroke(-opacity|-width)?|fill(-opacity)?|icon(-.*)?|label(-.*)?|visibility|coordinateProperties|@id)$/i;
+  const KIND_OF = { Point: 'points', MultiPoint: 'points', LineString: 'lines', MultiLineString: 'lines', Polygon: 'polygons', MultiPolygon: 'polygons' };
+  function cleanProps(p) {
+    const out = {};
+    for (const [k, v] of Object.entries(p || {})) {
+      if (STYLE_KEYS.test(k)) continue;
+      // descriptions come as {"@type": "html", value: "…"}: keep the text itself
+      const val = v && typeof v === 'object' && 'value' in v ? v.value : v;
+      out[k] = val == null || typeof val !== 'object' ? val : JSON.stringify(val);
+    }
+    return out;
+  }
+  // One feature can hold mixed geometry (KML MultiGeometry); Shapefile needs one type per file, so split it.
+  function splitFeature(f, push) {
+    const g = f.geometry;
+    if (!g) return;
+    if (g.type !== 'GeometryCollection') { if (KIND_OF[g.type]) push(KIND_OF[g.type], { type: 'Feature', properties: cleanProps(f.properties), geometry: g }); return; }
+    const byKind = {};
+    for (const part of g.geometries || []) {
+      if (part.type === 'GeometryCollection') { splitFeature({ properties: f.properties, geometry: part }, push); continue; }
+      const k = KIND_OF[part.type];
+      if (k) (byKind[k] = byKind[k] || []).push(part);
+    }
+    const multi = { points: 'MultiPoint', lines: 'MultiLineString', polygons: 'MultiPolygon' };
+    for (const [k, parts] of Object.entries(byKind)) {
+      const coords = parts.flatMap((pt) => (pt.type.startsWith('Multi') ? pt.coordinates : [pt.coordinates]));
+      push(k, { type: 'Feature', properties: cleanProps(f.properties), geometry: { type: multi[k], coordinates: coords } });
+    }
+  }
+  function kmlToLayers(text, stem) {
+    const doc = new DOMParser().parseFromString(text, 'text/xml');
+    if (doc.getElementsByTagName('parsererror').length || !doc.getElementsByTagName('kml').length && !doc.getElementsByTagName('Placemark').length) {
+      throw new Error("This doesn't look like a valid KML file. It may be damaged, or it may be a different format with a .kml name.");
+    }
+    let node = toGeoJSON.kmlWithFolders(doc);
+    // skip wrapper folders (Google Earth often nests everything in one folder)
+    while (node.children.length === 1 && node.children[0].type === 'folder') node = node.children[0];
+    const groups = new Map(); // group name -> {points: [], lines: [], polygons: []}
+    const used = new Map();
+    const collect = (n, group) => {
+      for (const c of n.children || []) {
+        if (c.type === 'folder') collect(c, group);
+        else splitFeature(c, (kind, feat) => {
+          if (!groups.has(group)) groups.set(group, {});
+          (groups.get(group)[kind] = groups.get(group)[kind] || []).push(feat);
+        });
+      }
+    };
+    for (const c of node.children) {
+      if (c.type === 'folder') {
+        let name = String(c.meta?.name || 'Folder').trim() || 'Folder';
+        const n = (used.get(name) || 0) + 1; used.set(name, n);
+        if (n > 1) name = `${name} ${n}`;
+        collect(c, name);
+      } else collect({ children: [c] }, stem);
+    }
+    const layersOut = [];
+    for (const [group, kinds] of groups) {
+      const ks = ['points', 'lines', 'polygons'].filter((k) => kinds[k]);
+      for (const k of ks) {
+        const name = ks.length > 1 ? `${group} (${k})` : group;
+        // a layer mixing LineString and MultiLineString is typed "unknown" by GDAL: make them all multipart
+        const feats = kinds[k];
+        if (feats.some((f) => f.geometry.type.startsWith('Multi')) && feats.some((f) => !f.geometry.type.startsWith('Multi'))) {
+          for (const f of feats) if (!f.geometry.type.startsWith('Multi')) f.geometry = { type: `Multi${f.geometry.type}`, coordinates: [f.geometry.coordinates] };
+        }
+        layersOut.push({ name, text: JSON.stringify({ type: 'FeatureCollection', name, features: feats }) });
+      }
+    }
+    if (!layersOut.length) throw new Error('No points, lines or polygons were found in this KML. It may contain only images (ground overlays), network links or styles.');
+    return layersOut;
+  }
+  let originalKml = null; // the KML stored inside the last KMZ, offered as-is (keeps styles)
+  async function readKml(file) {
+    originalKml = null;
+    const ext = extOf(file.name);
+    const stem = file.name.replace(/\.[^.]+$/, '') || 'layer';
+    const bytes = new Uint8Array(await file.arrayBuffer());
+    let text;
+    if (ext === 'kmz' || (bytes[0] === 0x50 && bytes[1] === 0x4b)) {
+      let entries;
+      try { entries = fflate.unzipSync(bytes, { filter: (f) => /\.kml$/i.test(f.name) }); } catch (_) {
+        throw new Error("This KMZ couldn't be unpacked. It may be damaged or incomplete. Try downloading it again.");
+      }
+      const names = Object.keys(entries).sort((a, b) => (a.split('/').length - b.split('/').length) || (/doc\.kml$/i.test(b) - /doc\.kml$/i.test(a)));
+      if (!names.length) throw new Error('No KML file was found inside this KMZ.');
+      text = new TextDecoder().decode(entries[names[0]]);
+      originalKml = { name: `${stem}.kml`, bytes: entries[names[0]] };
+    } else {
+      text = new TextDecoder().decode(bytes);
+    }
+    return kmlToLayers(text, stem);
+  }
+
   const trySurvey = $('#try-survey');
   let sampleRequest;
   let viewingSample = false;
 
-  async function handleFile(file, sample = false) {
-    if (!file) return;
+  async function handleFiles(list, sample = false) {
+    const files = [...(list || [])];
+    if (!files.length) return;
     sampleRequest?.abort();
-    const mb = file.size / 1e6;
+    const file = files[0];
+    const mb = files.reduce((t, f) => t + f.size, 0) / 1e6;
+    const ext = files.length > 1 ? 'shpset' : extOf(file.name);
+    const label = files.length > 1 ? `${files.length} files` : file.name;
     if (mb > CFG.maxFileMB) {
-      track('open_fail', `too_big:${extOf(file.name)}:${bigBucket(mb)}`);
+      track('open_fail', `too_big:${ext}:${bigBucket(mb)}`);
       setStatus(`This file is ${mb.toFixed(0)} MB. The current limit is ${CFG.maxFileMB} MB so your browser does not run out of memory.`, 'error');
       return;
     }
     panel.hidden = true;
     mapEl.hidden = true;
+    document.querySelectorAll('.status.extra').forEach((e) => e.remove());
     bigFileHint = mb > CFG.bigFileMB
       ? ` This is a large file (${mb.toFixed(0)} MB): opening and converting can take 1–2 minutes. Keep this tab open; it is still working.`
       : '';
-    setStatus(`Opening ${file.name}…`, 'busy');
+    setStatus(`Opening ${label}…`, 'busy');
     try {
-      layers = await call('open', { file });
+      if (ext === 'kml' || ext === 'kmz') {
+        setStatus(`Reading ${file.name}…`, 'busy');
+        layers = await call('openGeojson', { layers: await readKml(file) });
+      } else if (files.length > 1 || /^(shp|shx|dbf|prj|cpg)$/.test(ext)) {
+        layers = await call('openFiles', { files });
+      } else {
+        layers = await call('open', { file });
+      }
       viewingSample = sample;
-      track('open_ok', sample ? 'sample' : `${(file.name.match(/\.(lpkx?|mpkx?|zip|7z)$/i) || [, 'other'])[1].toLowerCase()}:${sizeBucket(mb)}`);
+      const okExt = /^(lpkx?|mpkx?|zip|7z|kml|kmz|shpset|shp)$/.test(ext) ? ext : 'other';
+      track('open_ok', sample ? 'sample' : `${okExt}:${sizeBucket(mb)}`);
       renderLayers();
       panel.hidden = false;
       const geomCount = layers.filter((l) => l.geometryType).length;
-      setStatus(`${file.name}: ${layers.length} ${layers.length === 1 ? 'layer' : 'layers'} found (${geomCount} with geometry). Tick the ones you need, then convert.`, 'ok');
+      const noPrj = layers.some((l) => l.geometryType && !l.crs);
+      setStatus(`${label}: ${layers.length} ${layers.length === 1 ? 'layer' : 'layers'} found (${geomCount} with geometry). Tick the ones you need, then convert.`
+        + (noPrj ? ' No coordinate system was found (missing .prj file): KML, KMZ and GeoJSON output will assume the coordinates are already longitude/latitude.' : ''), 'ok');
+      if (originalKml) {
+        // shown in its own line so the map preview's status messages don't replace it
+        const p = document.createElement('p');
+        p.className = 'status extra';
+        const a = document.createElement('button');
+        a.type = 'button'; a.className = 'link';
+        a.textContent = 'Download the original KML inside this KMZ';
+        const kmlFile = originalKml;
+        a.addEventListener('click', () => { download(kmlFile.name, kmlFile.bytes, 'application/vnd.google-earth.kml+xml'); track('export_ok', 'kml:original'); });
+        p.append(a, ' (unchanged, keeps its styles and folders).');
+        status.after(p);
+      }
       const first = layers[firstGeomIndex()];
       if (first) showPreview(first);
     } catch (err) {
       const kind = errKind(err.message);
-      track('open_fail', `${kind}:${extOf(file.name)}:${await signature(file)}:${sizeBucket(mb)}`);
+      track('open_fail', `${kind}:${ext}:${files.length > 1 ? 'set' : await signature(file)}:${sizeBucket(mb)}`);
       setStatus(err.message + (kind === 'memory' ? '' : ' If you can share this file, we will look into why it does not open:'), 'error');
       if (kind !== 'memory') addReportLink('file', err.message);
     }
@@ -280,7 +402,7 @@
         const limit = !isUnlocked && l.featureCount > CFG.freeFeatureLimit ? CFG.freeFeatureLimit : undefined;
         let r;
         try {
-          r = await call('export', { source: l.source, layer: l.name, format: fmt, limit, hasGeometry: !!l.geometryType });
+          r = await call('export', { source: l.source, layer: l.name, format: fmt, limit, hasGeometry: !!l.geometryType, noCrs: !!l.geometryType && !l.crs });
         } catch (err) {
           failed.push({ l, fmt, msg: err.message });
           track('export_fail', `${exportErrKind(err.message)}:${format}:${geomKey(l.geometryType)}`);
@@ -321,6 +443,7 @@
         return;
       }
       let msg = 'Done. Check your downloads folder.';
+      if (['kml', 'kmz', 'geojson'].includes(format) && sel.some((l) => l.geometryType && !l.crs)) msg += ' This data had no coordinate system (.prj), so the coordinates were kept as they are; if it lands in the wrong place, the original was not in longitude/latitude.';
       if (format === 'kmz') msg += ' Open the .kmz in Google Earth, or import it into Google My Maps (My Maps accepts up to about 2,000 features per layer).';
       if (format === 'shp') msg += ' Note: Shapefile field names are limited to 10 characters and very large numbers can be truncated; use GeoPackage or GeoJSON if exact values matter.';
       if (!isUnlocked && sel.some((l) => l.featureCount > CFG.freeFeatureLimit)) msg += ` The free version exported the first ${CFG.freeFeatureLimit.toLocaleString()} features.`;
@@ -344,7 +467,7 @@
       const response = await fetch($('#survey-download').href, { signal: sampleRequest.signal });
       if (!response.ok) throw new Error('Download failed');
       const blob = await response.blob();
-      await handleFile(new File([blob], 'survey.lpk'), true);
+      await handleFiles([new File([blob], 'survey.lpk')], true);
     } catch (err) {
       if (err.name !== 'AbortError') setStatus('Could not load the example. Try again or download the file.', 'error');
     } finally {
@@ -357,13 +480,13 @@
   drop.addEventListener('click', () => input.click());
   drop.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); input.click(); } });
   input.addEventListener('change', () => {
-    const f = input.files[0];
+    const f = [...input.files];
     input.value = ''; // so choosing the same file again (e.g. to retry) still fires 'change'
-    handleFile(f);
+    handleFiles(f);
   });
   ['dragenter', 'dragover'].forEach((ev) => drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.add('over'); }));
   ['dragleave', 'drop'].forEach((ev) => drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.remove('over'); }));
-  drop.addEventListener('drop', (e) => handleFile(e.dataTransfer.files[0]));
+  drop.addEventListener('drop', (e) => handleFiles(e.dataTransfer.files));
   layersEl.addEventListener('click', (e) => {
     const idx = e.target?.dataset?.preview;
     if (idx !== undefined) { e.preventDefault(); showPreview(layers[+idx]); }

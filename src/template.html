@@ -28,6 +28,7 @@
       <a href="/lpk-to-shapefile/">LPK</a>
       <a href="/mpk-to-shapefile/">MPK</a>
       <a href="/gdb-to-shapefile/">GDB</a>
+      <a href="/kml-to-shapefile/">KML</a>
       <a href="/#formats">Formats</a>
     </nav>
   </div>
@@ -56,8 +57,8 @@
       <div id="drop" class="drop" tabindex="0" role="button" aria-label="Choose a file">
         <span class="btn-choose">Choose file</span>
         <span class="drop-hint">or drop it here</span>
-        <span class="drop-meta">.lpk .lpkx .mpk .mpkx .gdb.zip · max 150 MB</span>
-        <input id="file" type="file" accept=".lpk,.lpkx,.mpk,.mpkx,.zip,.7z" hidden>
+        <span class="drop-meta">{{dropMeta}} · max 150 MB</span>
+        <input id="file" type="file" accept=".lpk,.lpkx,.mpk,.mpkx,.zip,.7z,.kml,.kmz,.shp,.shx,.dbf,.prj,.cpg" multiple hidden>
       </div>
 
       {{example}}
@@ -107,10 +108,12 @@
           <tr><td><code>.lpk</code> / <code>.lpkx</code></td><td>ArcGIS layer package (ArcMap / ArcGIS Pro)</td></tr>
           <tr><td><code>.mpk</code> / <code>.mpkx</code></td><td>ArcGIS map package (ArcMap / ArcGIS Pro)</td></tr>
           <tr><td><code>.gdb</code> (zipped)</td><td>File geodatabase folder, compressed to .zip</td></tr>
+          <tr><td><code>.kml</code> / <code>.kmz</code></td><td>Google Earth / Google My Maps file (KMZ is zipped KML)</td></tr>
+          <tr><td><code>.shp</code> + <code>.shx</code> + <code>.dbf</code> (+ <code>.prj</code>)</td><td>Shapefile: select all its files together, or a .zip of them</td></tr>
         </tbody>
       </table>
     </div>
-    <p class="muted">Output: Shapefile, GeoPackage, GeoJSON, KML, KMZ, CSV. Vector layers and tables only; raster and tile packages are not supported yet.</p>
+    <p class="muted">Output: Shapefile, GeoPackage, GeoJSON, KML, KMZ, CSV. Vector layers and tables only; raster and tile packages, KML ground overlays and styles are not converted.</p>
   </section>
 
   <section>
@@ -128,7 +131,7 @@
   <div class="wrap footer-in">
     <div>
       <a class="brand" href="/"><img src="/favicon.svg" alt="" width="20" height="20">GeoUnpack</a>
-      <p class="muted small">Open and convert Esri files in your browser.</p>
+      <p class="muted small">Open and convert Esri, KML and Shapefile data in your browser.</p>
     </div>
     <div class="footer-links">
       <a href="/about/">About</a>
@@ -143,6 +146,7 @@
 <script>window.GEOUNPACK_CONFIG = {{config}};</script>
 <script src="/vendor/leaflet.js" defer></script>
 <script src="/vendor/fflate.js" defer></script>
+<script src="/vendor/togeojson.js" defer></script>
 <script src="/app.js" defer></script>
 </body>
 </html>

@@ -37,10 +37,17 @@
 ### 6. 外链渠道（每周做一项，PLAYBOOK 6.2）
 - 背景：`docs/promotion/geounpack/other-channels.md`（11-21 核实）准备好了文案：① QGIS Canada 用户组自我介绍（1A）→ 1–2 周后问能否做 5 分钟演示（1B）；② Mapstodon 注册、养一周再发工具介绍；③ Show HN（只发一次，要有 1–2 小时守着回复）；④ HANDOFF B4 的 AlternativeTo 收录。Geography Realm、Geoawesome 可选。
 - 状态（11-28 核查）：④ AlternativeTo 已提交（11-13 注册，11-15 进普通审核队列，11-22 最后一封提醒：队列几千个、可能很久不审，可付一次性费用插队，1–2 个工作日审，审前可全额退款）。① QGIS Canada、② Mapstodon、③ Show HN 都没找到记录（OSGeo Discourse、Mapstodon、HN 搜不到 geounpack，Gmail 里也没有这几个网站的注册邮件），按没做处理。
-- 下一步：AlternativeTo 是否付费插队由 Jiayi 决定（费用付款页才显示）。其余按 ①→③ 每周一项，Claude 每次先核实文案和规则还适用，发帖由 Jiayi 点发送。
+- 11-28 Jiayi 决定：AlternativeTo 不付费插队，留在普通队列。其余按 ①→③ 每周一项，Claude 每次先核实文案和规则还适用，发帖由 Jiayi 点发送。
+- 日期：2026-11-28 记录
+
+### 7. 相邻格式页面：第二批（等第一批收录后再做）
+- 背景：11-28 按选词线的《页面路线图-geounpack-2026-11-28》（Jiayi 电脑 ~/Projects/哥飞知识库/）上线第一批 5 页：kml-to-shapefile、kmz-to-shapefile、kmz-to-kml、shapefile-to-kml、shapefile-to-kmz。这些词 CPC 多为 0，价值在于把站做成 GIS 文件一站式入口、带动已有页面。
+- 第二批候选：kml-to-gpx / gpx-to-kml（kml to gpx 480/19、gpx to kml 320/12，需要加 GPX 输入和输出；togeojson 已能读 GPX）、kml-to-csv（320/7）、csv-to-shapefile（170/10，需要读带坐标列的 CSV）、how to open a kml file（880/10）、shapefile viewer（210/18）。“mpg to kml”是行车记录仪轨迹，不做。
+- 下一步：按 PLAYBOOK 第 5 节“新站先放一批、收录有点击再放下一批”，12-19 对比时一并看这 5 页的收录和展示（site:geounpack.com/kml、Search Console）；收录正常再做第二批。
 - 日期：2026-11-28 记录
 
 ## 最近完成
+- 2026-11-28 KML / KMZ / Shapefile 输入上线，新增 5 个页面（见第 7 项和 DEV_NOTES 11-28）。
 - 2026-11-28 Search Console 周查（PLAYBOOK 1.5），过去 28 天：26 次点击、595 次展示、平均排名 8。25 个查询词都已有对应页面（错拼如 gdp to kml、lplx、lpkz 落在现有页面上）；唯一没有专页的是“how to open mpk file (in qgis / arcgis pro)”，合计约 5 次展示，按 11-25 的决定等 12-19 对比后再看。本周不新建页面，也不改标题。点击主要来自 mpk-to-shapefile（6）、gdb-to-kmz（4）、mpk-viewer（3）。
 - 2026-11-28 main 分支同步到 mvp-v0.1（用合并提交，没有强推；main 上有一条 11-28 直接提交的 survey.lpk 示例，mvp-v0.1 上已有同样内容）。以后提交都推到 mvp-v0.1，再同步 main。
 - 2026-11-27 About 页加了一行“Other tools by the same developer: Find Shutter Count …”，链接 https://findshuttercount.com/（正常 follow 链接，带 title）。只此一处，单向（findshuttercount 不回链），不是站群互链。测试：LOCAL_GDAL=1 build + smoke（本次只有生成的 curves_gdb.zip 样本，ArcGIS Online 样本下载被网络拦截）failures: 0。

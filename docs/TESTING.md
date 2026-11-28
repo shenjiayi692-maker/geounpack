@@ -42,3 +42,9 @@ The LPK-to-Shapefile page links to `public/examples/survey.lpk`. It contains an 
 Install Python packages Fiona (with OpenFileGDB) and Playwright to regenerate or check it. From the repository root run `python scripts/make-lpk-example.py` to regenerate it. Serve a local build with `LOCAL_GDAL=1 npm run serve`, then run `python scripts/check-lpk-example.py http://localhost:8080` in a second terminal. Pass a Chrome executable path as the final argument if Playwright Chromium is unavailable.
 
 The check downloads the example from the page, selects each layer individually, opens its map popup and reads the resulting Shapefile ZIP. The stations layer has Alpha and Beta. The routes layer has Connector. The popup shows inspection_label and inspection_status. The DBF stores inspection and inspecti_1, with demo in the latter field on all three records.
+
+## KML / KMZ / Shapefile inputs (2026-11-28)
+
+`python3 scripts/make-kml-shp-samples.py samples/kmlshp` makes the samples (from `scripts/fixtures/trails.kml`: two folders, ExtendedData, mixed points/lines/polygons, a MultiGeometry, a non-ASCII name; a UTM shapefile as loose files and as .zip; a shapefile without .prj). Then `LOCAL_GDAL=1 npm run build && node scripts/smoke-kml-shp.cjs dist samples/kmlshp samples/_out_kmlshp`. It also checks that “download the original KML” returns the KMZ's doc.kml byte for byte, that a lone .shp gives the companion-files message, and opens survey.lpk as a regression.
+
+Result 2026-11-28: 8 cases, failures: 0. Outputs checked with pyogrio (feature counts, ExtendedData columns in the .dbf, bounds, UTM 18N → WGS84 in KML/KMZ/GeoJSON).

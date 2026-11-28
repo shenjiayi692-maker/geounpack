@@ -10,6 +10,7 @@
     "smoke": "npm run build && node scripts/smoke-browser.cjs"
   },
   "dependencies": {
+    "@tmcw/togeojson": "7.1.4",
     "7z-wasm": "1.2.0",
     "fflate": "0.8.2",
     "gdal3.js": "2.8.1",

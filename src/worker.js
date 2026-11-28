@@ -80,12 +80,61 @@ function copyTree(srcFS, src, dstFS, dst) {
   }
 }
 
-async function openFile(file) {
-  const G = await getGdal();
+async function resetSources(G) {
   // close anything previously opened
   for (const s of sources) { try { G.close(s.dataset); } catch (_) { /* ignore */ } }
   sources = [];
   fileCounter += 1;
+}
+
+// Opens one dataset already written to GDAL's file system and lists its layers.
+function makeRegister(G, result) {
+  let i = 0;
+  const fn = async (gdalPath, label) => {
+    const opened = await G.open(gdalPath);
+    const ds = opened.datasets[0];
+    if (!ds) throw new Error(`${label} could not be read. It may be damaged or incomplete.`);
+    const info = await G.ogrinfo(ds, ['-json', '-so']);
+    const id = `s${sources.length}`;
+    sources.push({ id, path: gdalPath, label, dataset: ds, wgs84: /\.geojson$/i.test(gdalPath) });
+    for (const L of info.layers || []) {
+      const gf = (L.geometryFields || [])[0];
+      const crsId = gf?.coordinateSystem?.projjson?.id;
+      result.push({
+        source: id,
+        sourceLabel: label,
+        name: L.name,
+        featureCount: L.featureCount ?? null,
+        geometryType: gf ? gf.type : null,
+        crs: crsId ? `${crsId.authority}:${crsId.code}` : (gf?.coordinateSystem?.projjson?.name || (gf ? null : null)),
+        fields: (L.fields || []).map((f) => ({ name: f.name, type: f.type })),
+      });
+    }
+  };
+  fn.next = () => i++;
+  return fn;
+}
+
+// Copy every part of each shapefile (.shp .shx .dbf .prj .cpg …) next to each other and open it.
+async function registerShapefiles(G, srcFS, shps, base, register) {
+  for (const s of shps) {
+    const dir = s.slice(0, s.lastIndexOf('/'));
+    const stem = s.split('/').pop().replace(/\.shp$/i, '');
+    const dstDir = `${base}/${register.next()}`;
+    G.Module.FS.mkdirTree(dstDir);
+    const parts = srcFS.readdir(dir).filter((n) => n.toLowerCase().startsWith(stem.toLowerCase() + '.'));
+    const has = (ext) => parts.some((n) => n.toLowerCase() === `${stem.toLowerCase()}.${ext}`);
+    if (!has('dbf') || !has('shx')) {
+      throw new Error(`${stem}.shp needs its companion files. Select the .shp together with the .shx and .dbf (and .prj) files that have the same name, or put them all in one .zip.`);
+    }
+    for (const n of parts) G.Module.FS.writeFile(`${dstDir}/${n}`, srcFS.readFile(`${dir}/${n}`));
+    await register(`${dstDir}/${stem}.shp`, `${stem}.shp`);
+  }
+}
+
+async function openFile(file) {
+  const G = await getGdal();
+  await resetSources(G);
 
   progress(`Unpacking ${file.name}…`);
   const sz = await SevenZip({ locateFile: (f) => `/vendor/${f}`, print: () => {}, printErr: () => {} });
@@ -108,45 +157,51 @@ async function openFile(file) {
   progress('Reading layers…');
   const result = [];
   const base = `/input/f${fileCounter}`;
-  let i = 0;
-  const register = async (srcPath, gdalPath, label) => {
-    const opened = await G.open(gdalPath);
-    const ds = opened.datasets[0];
-    const info = await G.ogrinfo(ds, ['-json', '-so']);
-    const id = `s${i++}`;
-    sources.push({ id, path: gdalPath, label, dataset: ds });
-    for (const L of info.layers || []) {
-      const gf = (L.geometryFields || [])[0];
-      const crsId = gf?.coordinateSystem?.projjson?.id;
-      result.push({
-        source: id,
-        sourceLabel: label,
-        name: L.name,
-        featureCount: L.featureCount ?? null,
-        geometryType: gf ? gf.type : null,
-        crs: crsId ? `${crsId.authority}:${crsId.code}` : (gf?.coordinateSystem?.projjson?.name || (gf ? 'unknown' : null)),
-        fields: (L.fields || []).map((f) => ({ name: f.name, type: f.type })),
-      });
-    }
-  };
-
+  const register = makeRegister(G, result);
   for (const g of gdbs) {
     const name = g.split('/').pop();
-    const dst = `${base}/${i}/${name}`;
+    const dst = `${base}/${register.next()}/${name}`;
     copyTree(sz.FS, g, G.Module.FS, dst);
-    await register(g, dst, name);
+    await register(dst, name);
   }
-  for (const s of shps) {
-    const dir = s.slice(0, s.lastIndexOf('/'));
-    const stem = s.split('/').pop().replace(/\.shp$/i, '');
-    const dstDir = `${base}/${i}`;
-    G.Module.FS.mkdirTree(dstDir);
-    for (const n of sz.FS.readdir(dir)) {
-      if (n.toLowerCase().startsWith(stem.toLowerCase() + '.')) {
-        G.Module.FS.writeFile(`${dstDir}/${n}`, sz.FS.readFile(`${dir}/${n}`));
-      }
-    }
-    await register(s, `${dstDir}/${stem}.shp`, `${stem}.shp`);
+  await registerShapefiles(G, sz.FS, shps, base, register);
+  return result;
+}
+
+// Several loose files picked together, e.g. roads.shp + roads.shx + roads.dbf + roads.prj.
+async function openFiles(files) {
+  const G = await getGdal();
+  await resetSources(G);
+  progress('Reading the files…');
+  const dir = `/loose/f${fileCounter}`;
+  G.Module.FS.mkdirTree(dir);
+  for (const f of files) G.Module.FS.writeFile(`${dir}/${f.name.replace(/[\\/]/g, '_')}`, new Uint8Array(await f.arrayBuffer()));
+  const shps = G.Module.FS.readdir(dir).filter((n) => /\.shp$/i.test(n)).map((n) => `${dir}/${n}`);
+  if (!shps.length) throw new Error('No .shp file was selected. Select the .shp file together with its .shx, .dbf and .prj files, or a .zip of them.');
+  const result = [];
+  const register = makeRegister(G, result);
+  await registerShapefiles(G, G.Module.FS, shps, `/input/f${fileCounter}`, register);
+  return result;
+}
+
+// KML/KMZ are converted to GeoJSON on the page (the KML reader in this GDAL build ignores
+// ExtendedData attributes); each group of features becomes one layer.
+async function openGeojsonLayers(layers) {
+  const G = await getGdal();
+  await resetSources(G);
+  progress('Reading layers…');
+  const result = [];
+  const register = makeRegister(G, result);
+  const base = `/input/f${fileCounter}`;
+  for (const l of layers) {
+    const dir = `${base}/${register.next()}`;
+    G.Module.FS.mkdirTree(dir);
+    const fname = `${safeName(l.name)}.geojson`;
+    G.Module.FS.writeFile(`${dir}/${fname}`, new TextEncoder().encode(l.text));
+    const before = result.length;
+    await register(`${dir}/${fname}`, l.label || l.name);
+    // GDAL names a GeoJSON layer after the file; show the readable name instead
+    for (let k = before; k < result.length; k++) { result[k].displayName = l.name; result[k].crs = 'EPSG:4326'; }
   }
   return result;
 }
@@ -161,17 +216,23 @@ const FORMATS = {
 
 function safeName(s) { return String(s).replace(/[^\w.-]+/g, '_'); }
 
-async function exportLayer({ source, layer, format, limit, hasGeometry }) {
+async function exportLayer({ source, layer, format, limit, hasGeometry, noCrs, where, outLayer }) {
   const G = await getGdal();
   const src = sources.find((s) => s.id === source);
   if (!src) throw new Error('Source not found. Please open the file again.');
   const fmt = FORMATS[format];
   if (!fmt) throw new Error(`Unknown format ${format}`);
   let args = ['-f', fmt.driver, ...fmt.args];
+  // without a coordinate system GDAL cannot reproject: keep the coordinates as they are
+  if (noCrs) args = args.filter((a, i, all) => a !== '-t_srs' && all[i - 1] !== '-t_srs');
   if (!hasGeometry && format === 'csv') args = ['-f', 'CSV'];
   if (limit) args.push('-limit', String(limit));
+  if (where) args.push('-where', where);
+  // KML-derived layers: label the output plainly as WGS 84 (otherwise a 3D variant ends up in the .prj)
+  if (src.wgs84 && format !== 'kml' && format !== 'geojson') args.push('-a_srs', 'EPSG:4326');
+  if (outLayer) args.push('-nln', outLayer);
   args.push('--config', 'OGR_ORGANIZE_POLYGONS', 'SKIP', layer);
-  const outName = safeName(layer);
+  const outName = safeName(outLayer || layer);
   progress(`Converting ${layer} to ${format.toUpperCase()}…`);
   const out = await G.ogr2ogr(src.dataset, args, outName);
   const files = [];
@@ -187,8 +248,8 @@ async function exportLayer({ source, layer, format, limit, hasGeometry }) {
   return { files, ext: fmt.ext, layer: outName };
 }
 
-async function preview({ source, layer, maxFeatures }) {
-  const r = await exportLayer({ source, layer, format: 'geojson', limit: maxFeatures, hasGeometry: true });
+async function preview({ source, layer, maxFeatures, noCrs }) {
+  const r = await exportLayer({ source, layer, format: 'geojson', limit: maxFeatures, hasGeometry: true, noCrs });
   const text = new TextDecoder().decode(r.files[0].bytes);
   return JSON.parse(text);
 }
@@ -198,6 +259,8 @@ self.onmessage = async (e) => {
   try {
     let result;
     if (type === 'open') result = await openFile(payload.file);
+    else if (type === 'openFiles') result = await openFiles(payload.files);
+    else if (type === 'openGeojson') result = await openGeojsonLayers(payload.layers);
     else if (type === 'preview') result = await preview(payload);
     else if (type === 'export') result = await exportLayer(payload);
     else throw new Error(`Unknown message ${type}`);

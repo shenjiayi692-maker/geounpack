@@ -25,6 +25,7 @@ const vendor = [
   ['leaflet/dist/leaflet.js', 'leaflet.js'],
   ['leaflet/dist/leaflet.css', 'leaflet.css'],
   ['fflate/umd/index.js', 'fflate.js'],
+  ['@tmcw/togeojson/dist/togeojson.umd.js', 'togeojson.js'],
 ];
 const LOCAL_GDAL = process.env.LOCAL_GDAL === '1';
 if (LOCAL_GDAL) {
@@ -49,8 +50,11 @@ function listItem(item) {
 }
 const OG_IMAGE = `${SITE}/og.png`;
 const url = (slug) => `${SITE}/${slug ? slug + '/' : ''}`;
-const nav = `<a href="/lpk-to-shapefile/">LPK</a><a href="/mpk-to-shapefile/">MPK</a><a href="/gdb-to-shapefile/">GDB</a><a href="/#formats">Formats</a>`;
-const FROM_LABEL = { ANY: 'Esri file', LPK: 'LPK', LPKX: 'LPKX', MPK: 'MPK', MPKX: 'MPKX', GDB: 'GDB (.zip)' };
+const nav = `<a href="/lpk-to-shapefile/">LPK</a><a href="/mpk-to-shapefile/">MPK</a><a href="/gdb-to-shapefile/">GDB</a><a href="/kml-to-shapefile/">KML</a><a href="/#formats">Formats</a>`;
+const FROM_LABEL = { ANY: 'Esri file', LPK: 'LPK', LPKX: 'LPKX', MPK: 'MPK', MPKX: 'MPKX', GDB: 'GDB (.zip)', KML: 'KML / KMZ', KMZ: 'KMZ', SHP: 'Shapefile' };
+// what the drop box says it accepts (every page accepts every format; this just matches the page)
+const DROP_META = { KML: '.kml .kmz', KMZ: '.kmz .kml', SHP: '.shp + .shx + .dbf + .prj, or a .zip of them' };
+const DROP_DEFAULT = '.lpk .lpkx .mpk .mpkx .gdb.zip';
 
 for (const p of pages) {
   const faqHtml = p.faq.map(([q, a]) => `<details><summary>${esc(q)}</summary><p>${esc(a)}</p></details>`).join('\n');
@@ -95,6 +99,7 @@ for (const p of pages) {
     .replace('{{jsonld}}', jsonld)
         .replace('{{h1}}', esc(p.h1))
     .replace('{{subtitle}}', esc(p.subtitle || ''))
+    .replace('{{dropMeta}}', esc(DROP_META[p.from] || DROP_DEFAULT))
     .replace('{{fromLabel}}', esc(FROM_LABEL[p.from] || 'LPK / MPK / GDB'))
     .replace('{{lead}}', esc(p.lead))
     .replace('{{steps}}', steps)
@@ -137,6 +142,6 @@ fs.writeFileSync(path.join(dist, 'sitemap.xml'),
   `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${all.map((p) => `  <url><loc>${url(p.slug)}</loc><lastmod>${p.updated || CONTENT_UPDATED}</lastmod></url>`).join('\n')}\n</urlset>\n`);
 fs.writeFileSync(path.join(dist, 'robots.txt'), NOINDEX ? 'User-agent: *\nDisallow: /\n' : `User-agent: *\nAllow: /\n\nSitemap: ${SITE}/sitemap.xml\n`);
 fs.writeFileSync(path.join(dist, 'llms.txt'),
-  `# GeoUnpack\n\n> Free browser-based tool to open and convert Esri ArcGIS layer packages (.lpk, .lpkx), map packages (.mpk, .mpkx) and zipped file geodatabases (.gdb) to Shapefile, GeoPackage, GeoJSON, KML, KMZ and CSV without ArcGIS. Conversion runs locally in the browser with GDAL compiled to WebAssembly; files are never uploaded.\n\n## Converters\n${pages.map((p) => `- [${p.h1}](${url(p.slug)}): ${p.description}`).join('\n')}\n\n## About\n- [About GeoUnpack](${url('about')}): who makes it, how it works, contact\n\n## Limits\n- Vector layers and tables only (no raster, tile or scene packages yet)\n- Files up to 150 MB\n`);
+  `# GeoUnpack\n\n> Free browser-based tool to open and convert Esri ArcGIS layer packages (.lpk, .lpkx), map packages (.mpk, .mpkx) and zipped file geodatabases (.gdb), plus KML/KMZ files and shapefiles, to Shapefile, GeoPackage, GeoJSON, KML, KMZ and CSV without ArcGIS. Conversion runs locally in the browser with GDAL compiled to WebAssembly; files are never uploaded.\n\n## Converters\n${pages.map((p) => `- [${p.h1}](${url(p.slug)}): ${p.description}`).join('\n')}\n\n## About\n- [About GeoUnpack](${url('about')}): who makes it, how it works, contact\n\n## Limits\n- Vector layers and tables only (no raster, tile or scene packages yet)\n- Files up to 150 MB\n`);
 
 console.log(`Built ${pages.length + prose.length} pages into dist/ for ${SITE}${NOINDEX ? ' (noindex preview)' : ''}`);
