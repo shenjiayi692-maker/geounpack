@@ -34,7 +34,15 @@
 - 下一步：每周看一次 PR 有没有评论或被合并；维护者要求改动就在同一分支上改。合并后记在这里。
 - 日期：2026-11-27 记录
 
+### 6. 外链渠道（每周做一项，PLAYBOOK 6.2）
+- 背景：`docs/promotion/geounpack/other-channels.md`（11-21 核实）准备好了文案：① QGIS Canada 用户组自我介绍（1A）→ 1–2 周后问能否做 5 分钟演示（1B）；② Mapstodon 注册、养一周再发工具介绍；③ Show HN（只发一次，要有 1–2 小时守着回复）；④ HANDOFF B4 的 AlternativeTo 收录。Geography Realm、Geoawesome 可选。
+- 状态：不清楚哪些已经做过（11-28 问 Jiayi）。
+- 下一步：Jiayi 说明哪些做过；没做的按 ①→④ 每周一项，Claude 每次先核实文案和规则还适用，发帖/提交由 Jiayi 点发送。
+- 日期：2026-11-28 记录
+
 ## 最近完成
+- 2026-11-28 Search Console 周查（PLAYBOOK 1.5），过去 28 天：26 次点击、595 次展示、平均排名 8。25 个查询词都已有对应页面（错拼如 gdp to kml、lplx、lpkz 落在现有页面上）；唯一没有专页的是“how to open mpk file (in qgis / arcgis pro)”，合计约 5 次展示，按 11-25 的决定等 12-19 对比后再看。本周不新建页面，也不改标题。点击主要来自 mpk-to-shapefile（6）、gdb-to-kmz（4）、mpk-viewer（3）。
+- 2026-11-28 main 分支同步到 mvp-v0.1（用合并提交，没有强推；main 上有一条 11-28 直接提交的 survey.lpk 示例，mvp-v0.1 上已有同样内容）。以后提交都推到 mvp-v0.1，再同步 main。
 - 2026-11-27 About 页加了一行“Other tools by the same developer: Find Shutter Count …”，链接 https://findshuttercount.com/（正常 follow 链接，带 title）。只此一处，单向（findshuttercount 不回链），不是站群互链。测试：LOCAL_GDAL=1 build + smoke（本次只有生成的 curves_gdb.zip 样本，ArcGIS Online 样本下载被网络拦截）failures: 0。
 - 2026-11-27 GitHub 上每次提交都有一个“Workers Builds: geounpack”检查失败：来源是 11-3 误建的同名 Worker（不是网站用的 Pages 项目），没有域名和路由，部署命令 `npx wrangler preview` 缺配置所以每次都失败。按 Jiayi 的选择断开了它的 Git 连接（Worker 保留，不再构建）。网站一直由 Pages 项目 geounpack 部署，不受影响。同日在线上确认了 too_big 新统计生效（拦截 sendBeacon 测试，未写入真实数据）。
 - 2026-11-27 超过 150 MB 的打开失败改为按扩展名和超出大小分段统计（150-300mb / 300-500mb / 500mb-1gb / gt1gb），以后据此判断要不要提高上限。
