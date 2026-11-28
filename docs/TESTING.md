@@ -34,3 +34,11 @@ The smoke test now also ticks **all layers** and exports every format (users of 
 
 Result 2026-11-23: 6 samples, single-layer and all-layer exports in 6 formats, failures: 0.
 Note: Chromium silently drops a download started immediately after another one, so the test pauses 1.5 s between all-layer exports.
+
+## Two-layer survey example
+
+The LPK-to-Shapefile page links to `public/examples/survey.lpk`. It contains an original CC0 survey geodatabase in a synthetic ZIP container. This exercises embedded vector extraction. ArcMap layer documents and symbology are outside the scope of the fixture.
+
+Install Python packages Fiona (with OpenFileGDB) and Playwright to regenerate or check it. From the repository root run `python scripts/make-lpk-example.py` to regenerate it. Serve a local build with `LOCAL_GDAL=1 npm run serve`, then run `python scripts/check-lpk-example.py http://localhost:8080` in a second terminal. Pass a Chrome executable path as the final argument if Playwright Chromium is unavailable.
+
+The check downloads the example from the page, selects each layer individually, opens its map popup and reads the resulting Shapefile ZIP. The stations layer has Alpha and Beta. The routes layer has Connector. The popup shows inspection_label and inspection_status. The DBF stores inspection and inspecti_1, with demo in the latter field on all three records.
