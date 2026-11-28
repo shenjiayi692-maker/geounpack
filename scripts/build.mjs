@@ -2,6 +2,7 @@
 // and copies the WebAssembly libraries into dist/vendor.
 import { fileURLToPath } from 'node:url';
 import fs from 'node:fs';
+import crypto from 'node:crypto';
 import path from 'node:path';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -35,6 +36,11 @@ if (LOCAL_GDAL) {
 for (const [from, to] of vendor) fs.copyFileSync(path.join(nm, from), path.join(dist, 'vendor', to));
 fs.cpSync(path.join(nm, 'leaflet/dist/images'), path.join(dist, 'vendor/images'), { recursive: true });
 for (const f of ['app.js', 'worker.js', 'styles.css']) fs.copyFileSync(path.join(src, f), path.join(dist, f));
+// worker.js is cached for an hour (_headers): give its URL a content hash so a new app.js never talks to an old worker
+const workerHash = crypto.createHash('sha256').update(fs.readFileSync(path.join(src, 'worker.js'))).digest('hex').slice(0, 10);
+const appJs = fs.readFileSync(path.join(dist, 'app.js'), 'utf8');
+if (!appJs.includes("new Worker('/worker.js'")) throw new Error('build: worker URL not found in app.js');
+fs.writeFileSync(path.join(dist, 'app.js'), appJs.replace("new Worker('/worker.js'", `new Worker('/worker.js?v=${workerHash}'`));
 fs.cpSync(path.join(root, 'public'), dist, { recursive: true });
 
 // Date the page content last really changed (per page: "updated" in pages.json / prose.json).

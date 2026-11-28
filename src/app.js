@@ -73,7 +73,7 @@
 
   function getWorker() {
     if (worker) return worker;
-    worker = new Worker('/worker.js' + (CFG.localGdal ? '?gdal=local' : ''));
+    worker = new Worker('/worker.js' + (CFG.localGdal ? '&gdal=local' : ''));
     worker.onmessage = (e) => {
       const m = e.data;
       if (m.type === 'progress') return setStatus(m.msg, 'busy');
