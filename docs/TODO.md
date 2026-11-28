@@ -36,8 +36,8 @@
 
 ### 6. 外链渠道（每周做一项，PLAYBOOK 6.2）
 - 背景：`docs/promotion/geounpack/other-channels.md`（11-21 核实）准备好了文案：① QGIS Canada 用户组自我介绍（1A）→ 1–2 周后问能否做 5 分钟演示（1B）；② Mapstodon 注册、养一周再发工具介绍；③ Show HN（只发一次，要有 1–2 小时守着回复）；④ HANDOFF B4 的 AlternativeTo 收录。Geography Realm、Geoawesome 可选。
-- 状态：不清楚哪些已经做过（11-28 问 Jiayi）。
-- 下一步：Jiayi 说明哪些做过；没做的按 ①→④ 每周一项，Claude 每次先核实文案和规则还适用，发帖/提交由 Jiayi 点发送。
+- 状态（11-28 核查）：④ AlternativeTo 已提交（11-13 注册，11-15 进普通审核队列，11-22 最后一封提醒：队列几千个、可能很久不审，可付一次性费用插队，1–2 个工作日审，审前可全额退款）。① QGIS Canada、② Mapstodon、③ Show HN 都没找到记录（OSGeo Discourse、Mapstodon、HN 搜不到 geounpack，Gmail 里也没有这几个网站的注册邮件），按没做处理。
+- 下一步：AlternativeTo 是否付费插队由 Jiayi 决定（费用付款页才显示）。其余按 ①→③ 每周一项，Claude 每次先核实文案和规则还适用，发帖由 Jiayi 点发送。
 - 日期：2026-11-28 记录
 
 ## 最近完成
