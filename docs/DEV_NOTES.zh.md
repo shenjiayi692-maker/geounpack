@@ -77,6 +77,7 @@ _最后更新 2026-11-03_
 - [x] “关于”页写清作者、原理、限制、联系邮箱 hello@geounpack.com（**需要在 Cloudflare Email Routing 设置转发**）；所有页面带 og 分享预览。
 - [ ] 站点地图、页面加载速度、移动端适配。
 - [x] 2026-11-23 多图层导出：一个图层失败不再让整批失败，其余图层照常打包下载，提示里写明失败图层、格式和 GDAL 报错原文，并建议换格式或发文件给我们。起因：11-23 有用户在 /mpk-viewer/ 打开 10–50 MB 的 .mpk 13 次，导出失败 35 次（原因只记了 other），成功 10 次。用 8 个真实样本（含同名图层、附件表、Z 值、真曲线、75 MB 文件）反复导出均无法复现。导出和预览失败的统计改为 `类别:格式:几何类型`（类别为 crs/geometry/field/exists/js/read/memory/other，不记录 GDAL 原文，因为其中可能含图层名）；部分成功记为 `export_ok` 的 `格式:multi:partial`。
+- [x] 2026-11-27 文件超过 150 MB 上限时，统计从只记 `too_big` 改为 `too_big:扩展名:超出分段`（150-300mb / 300-500mb / 500mb-1gb / gt1gb），用来判断提高上限能不能留住这些用户。起因：11-24 有 3 次 too_big，不知道超出多少。不记文件名。
 - [x] 2026-11-22 打开失败时，统计里多记扩展名、文件头类型（7z/zip/rar/gzip/pdf/xml/other）和大小区间，格式 `原因:扩展名:文件头:大小`；失败提示里请用户把文件发到 hello@geounpack.com。起因：上线首日解包失败 4 次、成功 3 次。
 - [x] 2026-11-21 匿名使用统计：前端 `track()` 用 sendBeacon 发到 `/api/e`（`functions/api/e.js`，Cloudflare Pages Function），按“日期 + 网站 + 页面 + 事件 + 简短类别”累加到 D1 数据库 `site-events` 的 `counts` 表（两个网站共用，生产环境绑定名 `DB`）。只接受白名单事件，不存文件名、图层名、IP 或 Cookie；隐私页已写明。新增事件要同时改 `functions/api/e.js` 的白名单（两个仓库各一份）。
 - [x] 2026-11-21 根据 Search Console 第一周数据：新增 KMZ 导出（浏览器里把 KML 压成 doc.kml）；新增 gdb-to-kmz、mpkx-viewer、lpkx-viewer 三页（“mpkx”“lpkx file”“gdb to kmz”有展示但没有对应页面）；改写 open-lpk-in-qgis、open-lpk-without-arcgis、mpk-viewer、lpk-viewer 的标题和描述（展示多、点击少）。改过的页面在 pages.json 里带 `updated` 字段。4 周后对比这几页的点击率。
